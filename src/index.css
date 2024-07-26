@@ -1,34 +1,19 @@
-/* src/index.css */
+/* src/App.css */
 body, html {
+  height: 100%;
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
-  background-color: #ffe6f0; /* Pinkish background color */
+  background-color: #fff; /* White background */
   font-family: Arial, sans-serif;
 }
 
-/* Navbar styles */
-.navbar {
-  display: flex;
-  justify-content: space-around;
-  background-color: #ffccdd; /* Slightly darker pink for the navbar */
-  padding: 1rem;
+.main-content {
+  padding: 0;
 }
 
-.navbar a {
-  color: white;
-  text-decoration: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
-.navbar a:hover {
-  background-color: #ff99aa; /* Darker pink on hover */
-}
-
-/* General div padding */
-div {
-  padding: 1rem;
-}
+  

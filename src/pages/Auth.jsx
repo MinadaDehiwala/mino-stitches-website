@@ -1,49 +1,36 @@
 // src/pages/Auth.jsx
 import React, { useState } from 'react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Button, Typography } from '@mui/material';
 import './Auth.css';
 
-// Form validation schema
-const schema = yup.object().shape({
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
-});
-
 const Auth = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
+  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
-    const auth = getAuth();
-    try {
-      await signInWithEmailAndPassword(auth, data.email, data.password);
-      console.log('Logged in successfully');
-    } catch (error) {
-      console.error('Error logging in:', error);
-    }
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
   };
 
   return (
-    <div className="auth-container">
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label>Email</label>
-          <input type="email" {...register('email')} />
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input type="password" {...register('password')} />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-        <button type="submit">Login</button>
+    <Box className="auth-container">
+      <Typography variant="h4">{isLogin ? 'Login' : 'Sign Up'}</Typography>
+      <form>
+        {!isLogin && (
+          <>
+            <TextField label="First Name" variant="outlined" fullWidth margin="normal" />
+            <TextField label="Last Name" variant="outlined" fullWidth margin="normal" />
+          </>
+        )}
+        <TextField label="Email" variant="outlined" fullWidth margin="normal" />
+        <TextField label="Password" type="password" variant="outlined" fullWidth margin="normal" />
+        {!isLogin && <TextField label="Confirm Password" type="password" variant="outlined" fullWidth margin="normal" />}
+        <Button variant="contained" color="primary" fullWidth>{isLogin ? 'Login' : 'Sign Up'}</Button>
       </form>
-    </div>
+      <Typography variant="body1" className="toggle-mode" onClick={toggleMode}>
+        {isLogin ? 'No account? Sign up here' : 'Already have an account? Login here'}
+      </Typography>
+    </Box>
   );
 };
 
