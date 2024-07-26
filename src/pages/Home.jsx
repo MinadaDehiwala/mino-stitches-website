@@ -1,5 +1,6 @@
 // src/pages/Home.jsx
 import React from 'react';
+import Navbar from '../components/Navbar';
 import { Typography, Box, Button } from '@mui/material';
 import './Home.css';
 import homeImage from '../assets/home-1.png';
@@ -7,6 +8,8 @@ import homeImage from '../assets/home-1.png';
 const Home = () => {
   return (
     <div className="home-container">
+      <Navbar />
+
       <div className="hero-section">
         <img src={homeImage} alt="Embroidery" className="hero-image" />
         <div className="hero-text">

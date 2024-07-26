@@ -1,78 +1,62 @@
-// src/pages/Signup.jsx
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import './Signup.css';
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBIcon,
+  MDBRow,
+  MDBCol,
+  MDBCheckbox
+} from 'mdb-react-ui-kit';
 
-// Form validation schema
-const schema = yup.object().shape({
-  firstName: yup.string().required('First Name is required'),
-  lastName: yup.string().required('Last Name is required'),
-  phoneNumber: yup.string().required('Phone Number is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-  confirmPassword: yup.string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm Password is required')
-});
-
-const Signup = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
-
-  const onSubmit = data => {
-    console.log(data);
-    // Handle form submission
-  };
-
+function Signup() {
   return (
-    <div className="signup-container">
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label>First Name</label>
-          <input type="text" {...register('firstName')} />
-          {errors.firstName && <p>{errors.firstName.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Last Name</label>
-          <input type="text" {...register('lastName')} />
-          {errors.lastName && <p>{errors.lastName.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Phone Number</label>
-          <input type="text" {...register('phoneNumber')} />
-          {errors.phoneNumber && <p>{errors.phoneNumber.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Address (optional)</label>
-          <input type="text" {...register('address')} />
-        </div>
-        <div className="form-group">
-          <label>Profile Picture</label>
-          <input type="file" {...register('profilePic')} />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input type="email" {...register('email')} />
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input type="password" {...register('password')} />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Confirm Password</label>
-          <input type="password" {...register('confirmPassword')} />
-          {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
+    <MDBContainer fluid className='my-5'>
+      <MDBRow className='g-0 align-items-center'>
+        <MDBCol col='6'>
+          <MDBCard className='my-5 cascading-right' style={{background: 'hsla(0, 0%, 100%, 0.55)',  backdropFilter: 'blur(30px)'}}>
+            <MDBCardBody className='p-5 shadow-5 text-center'>
+              <h2 className="fw-bold mb-5">Sign up now</h2>
+              <MDBRow>
+                <MDBCol col='6'>
+                  <MDBInput wrapperClass='mb-4' label='First name' id='form1' type='text'/>
+                </MDBCol>
+                <MDBCol col='6'>
+                  <MDBInput wrapperClass='mb-4' label='Last name' id='form2' type='text'/>
+                </MDBCol>
+              </MDBRow>
+              <MDBInput wrapperClass='mb-4' label='Email' id='form3' type='email'/>
+              <MDBInput wrapperClass='mb-4' label='Password' id='form4' type='password'/>
+              <div className='d-flex justify-content-center mb-4'>
+                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
+              </div>
+              <MDBBtn className='w-100 mb-4' size='md'>sign up</MDBBtn>
+              <div className="text-center">
+                <p>or sign up with:</p>
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='facebook-f' size="sm"/>
+                </MDBBtn>
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='twitter' size="sm"/>
+                </MDBBtn>
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='google' size="sm"/>
+                </MDBBtn>
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='github' size="sm"/>
+                </MDBBtn>
+              </div>
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+        <MDBCol col='6'>
+          <img src="https://your-image-url.jpg" className="w-100 rounded-4 shadow-4" alt="" fluid/>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
-};
+}
 
 export default Signup;

@@ -4,8 +4,8 @@ import React from 'react';
 const MyOrders = () => {
   return (
     <div>
-      <h1>My Orders Page</h1>
-      <p>View your order history.</p>
+      <h1>My Orders</h1>
+      {/* Add your MyOrders component content here */}
     </div>
   );
 };
