@@ -1,54 +1,48 @@
 // src/pages/Auth.jsx
 import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import './Auth.css';
+
+// Form validation schema
+const schema = yup.object().shape({
+  email: yup.string().email('Invalid email').required('Email is required'),
+  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required')
+});
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema)
+  });
 
-  const handleAuth = async () => {
-    if (isSignUp) {
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert('User registered successfully!');
-      } catch (error) {
-        console.error('Error signing up:', error);
-        alert('Error signing up. Please try again.');
-      }
-    } else {
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert('User logged in successfully!');
-      } catch (error) {
-        console.error('Error logging in:', error);
-        alert('Error logging in. Please try again.');
-      }
+  const onSubmit = async (data) => {
+    const auth = getAuth();
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.password);
+      console.log('Logged in successfully');
+    } catch (error) {
+      console.error('Error logging in:', error);
     }
   };
 
   return (
-    <div>
-      <h1>{isSignUp ? 'Sign Up' : 'Login'}</h1>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button onClick={handleAuth}>
-        {isSignUp ? 'Sign Up' : 'Login'}
-      </button>
-      <button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Already have an account? Login' : 'Don\'t have an account? Sign Up'}
-      </button>
+    <div className="auth-container">
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="form-group">
+          <label>Email</label>
+          <input type="email" {...register('email')} />
+          {errors.email && <p>{errors.email.message}</p>}
+        </div>
+        <div className="form-group">
+          <label>Password</label>
+          <input type="password" {...register('password')} />
+          {errors.password && <p>{errors.password.message}</p>}
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
   );
 };
