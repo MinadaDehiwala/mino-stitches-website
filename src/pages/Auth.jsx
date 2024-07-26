@@ -1,55 +1,36 @@
 // src/pages/Auth.jsx
 import React, { useState } from 'react';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+import { Box, TextField, Button, Typography } from '@mui/material';
+import './Auth.css';
 
 const Auth = () => {
-  const [isSignUp, setIsSignUp] = useState(true);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
 
-  const handleAuth = async () => {
-    if (isSignUp) {
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        alert('User registered successfully!');
-      } catch (error) {
-        console.error('Error signing up:', error);
-        alert('Error signing up. Please try again.');
-      }
-    } else {
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        alert('User logged in successfully!');
-      } catch (error) {
-        console.error('Error logging in:', error);
-        alert('Error logging in. Please try again.');
-      }
-    }
+  const toggleMode = () => {
+    setIsLogin(!isLogin);
   };
 
   return (
-    <div>
-      <h1>{isSignUp ? 'Sign Up' : 'Login'}</h1>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button onClick={handleAuth}>
-        {isSignUp ? 'Sign Up' : 'Login'}
-      </button>
-      <button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Already have an account? Login' : 'Don\'t have an account? Sign Up'}
-      </button>
-    </div>
+    <Box className="auth-container">
+      <Typography variant="h4">{isLogin ? 'Login' : 'Sign Up'}</Typography>
+      <form>
+        {!isLogin && (
+          <>
+            <TextField label="First Name" variant="outlined" fullWidth margin="normal" />
+            <TextField label="Last Name" variant="outlined" fullWidth margin="normal" />
+          </>
+        )}
+        <TextField label="Email" variant="outlined" fullWidth margin="normal" />
+        <TextField label="Password" type="password" variant="outlined" fullWidth margin="normal" />
+        {!isLogin && <TextField label="Confirm Password" type="password" variant="outlined" fullWidth margin="normal" />}
+        <Button variant="contained" color="primary" fullWidth>{isLogin ? 'Login' : 'Sign Up'}</Button>
+      </form>
+      <Typography variant="body1" className="toggle-mode" onClick={toggleMode}>
+        {isLogin ? 'No account? Sign up here' : 'Already have an account? Login here'}
+      </Typography>
+    </Box>
   );
 };
 
