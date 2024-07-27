@@ -1,10 +1,28 @@
+// src/pages/About.jsx
 import React from 'react';
+import { motion } from 'framer-motion';
 import './About.css';
 import aboutImage from '../assets/about-2.png';
 
 const About = () => {
   return (
-    <div className="about-container" style={{ backgroundImage: `url(${aboutImage})` }}>
+    <div className="about-container">
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ duration: 2 }}
+        style={{ 
+          position: 'absolute', 
+          top: 0, 
+          left: 0, 
+          width: '100%', 
+          height: '100%', 
+          backgroundImage: `url(${aboutImage})`, 
+          backgroundSize: 'cover', 
+          backgroundPosition: 'center',
+          zIndex: 0 
+        }} 
+      />
       <div className="about-content">
         <h1>Who We Are</h1>
         <p>

@@ -1,8 +1,7 @@
+/* src/pages/About.css */
 .about-container {
   width: 100%;
   height: 100vh;
-  background-size: cover;
-  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10,6 +9,8 @@
   color: white;
   text-align: center;
   padding: 50px 20px;
+  overflow: hidden;
+  background: black; /* Initial black background */
 }
 
 .about-container::before {
@@ -19,7 +20,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7); /* Darker overlay */
+  background: rgba(0, 0, 0, 0.7); /* Dark overlay */
   z-index: 1;
 }
 
@@ -79,4 +80,3 @@
     font-size: 0.9rem;
   }
 }
-  
