@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React from 'react';
 import {
   MDBBtn,
   MDBContainer,
@@ -8,62 +7,88 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBCheckbox
-} from 'mdb-react-ui-kit';
-import './Signup.css';
-import aboutImage from '../assets/about-2.png';
+  MDBCheckbox,
+  MDBIcon
+}
+from 'mdb-react-ui-kit';
 
-function Signup() {
-  const [fileName, setFileName] = useState('');
-
-  const handleFileChange = (event) => {
-    if (event.target.files.length > 0) {
-      setFileName(event.target.files[0].name);
-    }
-  };
-
+function App() {
   return (
-    <div className="signup-container" style={{ backgroundImage: `url(${aboutImage})` }}>
-      <div className="overlay"></div>
-      <MDBContainer fluid className='d-flex justify-content-center align-items-center'>
-        <MDBRow className='d-flex justify-content-center align-items-center'>
-          <MDBCol md='' className='signup-form-col'>
-            <MDBCard className='glass-card'>
-              <MDBCardBody>
-                <div className='d-flex flex-column text-center ms-5 me-5'>
-                  <h2 className="mt-1 mb-5 pb-1">Create an account</h2>
-                  
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='First Name' id='firstName' type='text' size='lg' required />
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Last Name' id='lastName' type='text' size='lg' required />
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Phone Number' id='phone' type='text' size='lg' required />
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Address (Optional)' id='address' type='text' size='lg' />
-                  
-                  <div className="mb-4">
-                    <label className="custom-file-upload">
-                      <input type="file" onChange={handleFileChange} />
-                      {fileName ? fileName : 'Choose Profile Picture'}
-                    </label>
-                  </div>
+    <MDBContainer fluid className='p-4'>
 
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Your Email' id='email' type='email' size='lg' required />
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Password' id='password' type='password' size='lg' required />
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Repeat your password' id='confirmPassword' type='password' size='lg' required />
+      <MDBRow>
 
-                  <div className='d-flex flex-row justify-content-center mb-4'>
-                    <MDBCheckbox name='flexCheck' id='flexCheckDefault' label='I agree to all statements in Terms of service' required />
-                  </div>
+        <MDBCol md='6' className='text-center text-md-start d-flex flex-column justify-content-center'>
 
-                  <MDBBtn className='mb-4 w-100 gradient-custom-4' size='lg'>Register</MDBBtn>
-                  
-                  <p className="text-white">Already have an account? <a href="#!" className="signup-link">Sign In</a></p>
-                </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </div>
+          <h1 className="my-5 display-3 fw-bold ls-tight px-3">
+            The best offer <br />
+            <span className="text-primary">for your business</span>
+          </h1>
+
+          <p className='px-3' style={{color: 'hsl(217, 10%, 50.8%)'}}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            Eveniet, itaque accusantium odio, soluta, corrupti aliquam
+            quibusdam tempora at cupiditate quis eum maiores libero
+            veritatis? Dicta facilis sint aliquid ipsum atque?
+          </p>
+
+        </MDBCol>
+
+        <MDBCol md='6'>
+
+          <MDBCard className='my-5'>
+            <MDBCardBody className='p-5'>
+
+              <MDBRow>
+                <MDBCol col='6'>
+                  <MDBInput wrapperClass='mb-4' label='First name' id='form1' type='text'/>
+                </MDBCol>
+
+                <MDBCol col='6'>
+                  <MDBInput wrapperClass='mb-4' label='Last name' id='form1' type='text'/>
+                </MDBCol>
+              </MDBRow>
+
+              <MDBInput wrapperClass='mb-4' label='Email' id='form1' type='email'/>
+              <MDBInput wrapperClass='mb-4' label='Password' id='form1' type='password'/>
+
+              <div className='d-flex justify-content-center mb-4'>
+                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
+              </div>
+
+              <MDBBtn className='w-100 mb-4' size='md'>sign up</MDBBtn>
+
+              <div className="text-center">
+
+                <p>or sign up with:</p>
+
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='facebook-f' size="sm"/>
+                </MDBBtn>
+
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='twitter' size="sm"/>
+                </MDBBtn>
+
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='google' size="sm"/>
+                </MDBBtn>
+
+                <MDBBtn tag='a' color='none' className='mx-3' style={{ color: '#1266f1' }}>
+                  <MDBIcon fab icon='github' size="sm"/>
+                </MDBBtn>
+
+              </div>
+
+            </MDBCardBody>
+          </MDBCard>
+
+        </MDBCol>
+
+      </MDBRow>
+
+    </MDBContainer>
   );
 }
 
-export default Signup;
+export default App;
