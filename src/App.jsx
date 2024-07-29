@@ -1,8 +1,8 @@
+// App.js
+import React from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import Products from './pages/Products.jsx';
 import Cart from './pages/Cart.jsx';
@@ -14,23 +14,53 @@ import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Navbar from './components/Navbar.jsx';
 
+// import admin routes
+import ManageProducts from "./pages/ManageProducts.jsx";
+import ManageUsers from "./pages/ManageUsers.jsx";
+
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx"; // Default import
+
 function App() {
-  return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/my-orders" element={<MyOrders />} />
-        <Route path="/chatbot" element={<ChatBot />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-    </Router>
-  );
+  const isUserAuthenticated = () => {
+    return {
+      userType: "customer" // this value can be admin/customer/unauthenticated
+    }
+  };
+
+  const getRoutes = (userType) => {
+    const customers_routes = [
+      { path: "/login", element: <Login /> },
+      { path: "/products", element: <Products /> },
+      { path: "/cart", element: <Cart /> },
+      { path: "/my-orders", element: <MyOrders /> },
+    ];
+
+    const admins_routes = [
+      { path: "/manager-users", element: <ManageUsers /> },
+      { path: "/manage-products", element: <ManageProducts /> },
+    ];
+
+    if (userType === "customer") {
+      return customers_routes;
+    } else if (userType === "admin") {
+      return admins_routes;
+    }
+  };
+
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Home />,
+    },
+    {
+      element: <ProtectedRoutes isUserAuthenticated={isUserAuthenticated} />,
+      children: getRoutes(isUserAuthenticated().userType),
+    },
+  ]);
+
+  return <RouterProvider router={router} />;
 }
 
 export default App;
