@@ -3,6 +3,7 @@ import { Box, Typography, Paper, Avatar, Grid, Button, Divider } from '@mui/mate
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import profileImage from '../assets/profile_dummy.png'; // Update with the correct path to the profile image
+import Navbar from '../components/Navbar';
 
 const ProfileContainer = styled(Box)({
   display: 'flex',
@@ -56,6 +57,7 @@ const Profile = () => {
 
   return (
     <ProfileContainer>
+      <Navbar />
       <ProfileBox elevation={3}>
         <UserAvatar src={profileImage} />
         <Typography variant="h5" component="h1" gutterBottom>

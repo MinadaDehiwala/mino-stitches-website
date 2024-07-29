@@ -3,9 +3,11 @@ import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, 
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Navbar from '../components/Navbar';
 import p1 from '../assets/p1.png';
 import p2 from '../assets/p2.png';
 import p3 from '../assets/p3.png';
+
 
 const MyOrdersContainer = styled(Box)({
   padding: '40px',
@@ -55,6 +57,7 @@ const orders = [
 const MyOrders = () => {
   return (
     <MyOrdersContainer>
+      <Navbar />
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
         My Orders
       </Typography>

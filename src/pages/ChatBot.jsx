@@ -5,6 +5,7 @@ import { styled, keyframes } from '@mui/system';
 import SendIcon from '@mui/icons-material/Send';
 import userProfileImage from '../assets/profile_dummy.png'; // Update with the correct path to the user profile image
 import botProfileImage from '../assets/bot_profile_dummy.png'; // Update with the correct path to the bot profile image
+import Navbar from '../components/Navbar';
 
 const backgroundAnimation = keyframes`
   0% { transform: translate(0, 0); }
@@ -190,6 +191,7 @@ const ChatBot = () => {
 
   return (
     <ChatContainer>
+      <Navbar />
       <DecorativeElement />
       <DecorativeElementTwo />
       <ChatBox elevation={3}>

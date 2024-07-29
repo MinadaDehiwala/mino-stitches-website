@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Grid, Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
+import Navbar from '../components/Navbar';
 import { styled } from '@mui/system';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import p1 from '../assets/p1.png';
@@ -34,6 +35,7 @@ const products = [
 const Products = () => {
   return (
     <ProductContainer>
+      <Navbar />
       <Typography variant="h4" component="h1" gutterBottom textAlign="center">
         Our Products
       </Typography>

@@ -34,6 +34,10 @@ function App() {
       { path: "/products", element: <Products /> },
       { path: "/cart", element: <Cart /> },
       { path: "/my-orders", element: <MyOrders /> },
+      { path: "/chatBot", element: <ChatBot /> },
+      { path: "/about", element: <About /> },
+      { path: "/signup", element: <Signup /> },
+      { path: "/profile", element: <Profile /> },
     ];
 
     const admins_routes = [
