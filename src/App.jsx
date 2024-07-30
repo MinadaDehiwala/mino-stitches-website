@@ -1,5 +1,5 @@
 // App.js
-import React from 'react';
+import React, { useContext } from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -13,6 +13,7 @@ import About from './pages/About.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import Navbar from './components/Navbar.jsx';
+import { AuthContext } from './context/AuthContextManager.jsx';
 
 // import admin routes
 import ManageProducts from "./pages/ManageProducts.jsx";
@@ -22,6 +23,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx"; // Default import
 
 function App() {
+
   const isUserAuthenticated = () => {
     return {
       userType: "customer" // this value can be admin/customer/unauthenticated

@@ -1,9 +1,16 @@
-import React from 'react';
-import { Box, Typography, Paper, Avatar, Grid, Button, Divider } from '@mui/material';
+import React, { useContext } from 'react';
+import { Box, Typography, Paper, Avatar, Button, Divider } from '@mui/material';
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import profileImage from '../assets/profile_dummy.png'; // Update with the correct path to the profile image
 import Navbar from '../components/Navbar';
+import { AuthContext } from '../context/AuthContextManager';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
+import { signOut } from "firebase/auth";
+import { auth } from "../configs/firebase"
 
 const ProfileContainer = styled(Box)({
   display: 'flex',
@@ -47,44 +54,41 @@ const InfoItem = styled(Box)({
 });
 
 const Profile = () => {
-  const dummyData = {
-    name: 'Sriyan Anurudda',
-    email: 'sriyan@gmail.com',
-    phone: '+94 77 952 5841',
-    address: '187 A, Piliyandala',
-    bio: '', // Removed the lorem text
-  };
+  const { authUser, logout } = useContext(AuthContext);
+
+
+  const logOutButtonHandler = async () => {
+    await signOut(auth)
+    logout()
+  }
+
 
   return (
     <ProfileContainer>
       <Navbar />
       <ProfileBox elevation={3}>
-        <UserAvatar src={profileImage} />
+        <FontAwesomeIcon icon={faUser} size="4x" />
         <Typography variant="h5" component="h1" gutterBottom>
-          {dummyData.name}
+          {`${authUser?.first_name} ${authUser?.last_name}`}
         </Typography>
-        {dummyData.bio && (
-          <Typography variant="body1" color="textSecondary" gutterBottom>
-            {dummyData.bio}
-          </Typography>
-        )}
+
         <Divider style={{ margin: '20px 0' }} />
         <InfoBox>
           <InfoItem>
             <Typography variant="body1"><strong>Email:</strong></Typography>
-            <Typography variant="body1">{dummyData.email}</Typography>
-          </InfoItem>
-          <InfoItem>
-            <Typography variant="body1"><strong>Phone:</strong></Typography>
-            <Typography variant="body1">{dummyData.phone}</Typography>
-          </InfoItem>
-          <InfoItem>
-            <Typography variant="body1"><strong>Address:</strong></Typography>
-            <Typography variant="body1">{dummyData.address}</Typography>
+            <Typography variant="body1">{authUser?.email}</Typography>
           </InfoItem>
         </InfoBox>
         <Button variant="contained" color="primary" startIcon={<EditIcon />} style={{ marginTop: '20px', borderRadius: '30px' }}>
           Edit Profile
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={logOutButtonHandler}
+          style={{ marginTop: '10px', borderRadius: '30px', backgroundColor: '#d32f2f' }} // Set button color to red
+        >
+          Logout
         </Button>
       </ProfileBox>
     </ProfileContainer>
