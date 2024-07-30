@@ -1,54 +1,120 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../configs/firebase"; 
+import Swal from 'sweetalert2';
+
 import {
-  MDBBtn,
   MDBContainer,
   MDBRow,
   MDBCol,
-  MDBInput,
   MDBCard,
-  MDBCardBody
+  MDBCardBody,
+  MDBInput,
+  MDBCheckbox,
+  MDBBtn,
+  MDBIcon
 } from 'mdb-react-ui-kit';
-import { useNavigate } from 'react-router-dom';
-import './Login.css';
-import backgroundImage from '../assets/home-1.png';
 
 function Login() {
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
 
-  const handleSignUp = () => {
-    navigate('/signup');
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const signIn = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You have successfully logged in!',
+      });
+    } catch (error) {
+      console.error("Error logging in", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.message,
+      });
+    }
+  };
+
+  const signInOnClickHandler = () => {
+    signIn();
   };
 
   return (
-    <div className="login-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className="overlay"></div>
-      <MDBContainer className="d-flex justify-content-center align-items-center">
-        <MDBRow className="d-flex justify-content-center align-items-center">
-          <MDBCol md='8' className="login-form-col">
-            <MDBCard className="glass-card">
-              <MDBCardBody>
-                <div className="d-flex flex-column text-center ms-5 me-5">
-                  <h2 className="mt-1 mb-5 pb-1 text-white">Welcome Back</h2>
-                  <p className="lead text-white">Please login to your account</p>
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Email address' id='form1' type='email' size='lg' />
-                  <MDBInput wrapperClass='mb-4' labelClass='text-white' inputClass='text-white placeholder-white' label='Password' id='form2' type='password' size='lg' />
-                  <div className="text-center pt-1 mb-5 pb-1">
-                    <MDBBtn className="mb-4 w-100 gradient-custom-2" size='lg'>Sign in</MDBBtn>
-                    <a className="text-white" href="#!">Forgot password?</a>
-                  </div>
-                  <div className="d-flex flex-row align-items-center justify-content-center pb-4 mb-4">
-                    <p className="mb-0 text-white">Don't have an account?</p>
-                    <MDBBtn outline className='mx-2' color='danger' size='lg' onClick={handleSignUp}>
-                      Sign Up
-                    </MDBBtn>
-                  </div>
+    <MDBContainer fluid className='p-4' style={{ 
+      backgroundImage: 'url(/src/assets/login_signup_background.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <MDBRow>
+        <MDBCol md='6' className='text-center text-md-start d-flex flex-column justify-content-center'>
+          <h1 className="my-5 display-3 fw-bold ls-tight px-3">
+            Welcome Back <br />
+            <span className="text-primary">to Mino Stitches</span>
+          </h1>
+          <p className='px-3' style={{ color: 'hsl(217, 10%, 50.8%)' }}>
+            Log in to access your personalized embroidery services. We are excited to have you back!
+          </p>
+        </MDBCol>
+
+        <MDBCol md='6' className='d-flex justify-content-center align-items-start' style={{ marginTop: '50px' }}>
+          <MDBCard className='my-5' style={{ width: '80%', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+            <MDBCardBody className='p-5'>
+              <h2 className='text-center mb-4'>Login</h2>
+              <MDBInput wrapperClass='mb-4' label='Email address' id='form1' name='email' type='email' onChange={onChangeHandler} value={formData.email}/>
+              <MDBInput wrapperClass='mb-4' label='Password' id='form2' name='password' type='password' onChange={onChangeHandler} value={formData.password}/>
+
+              <div className="d-flex justify-content-between mx-3 mb-4">
+                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
+                <a href="#!">Forgot password?</a>
+              </div>
+
+              <MDBBtn className="mb-4 w-100" onClick={signInOnClickHandler}>Sign in</MDBBtn>
+
+              <div className="text-center">
+                <p>Not a member? <a href="/signup">Register</a></p>
+                <p>or sign in with:</p>
+
+                <div className='d-flex justify-content-between mx-auto' style={{width: '40%'}}>
+                  <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
+                    <MDBIcon fab icon='facebook-f' size="sm"/>
+                  </MDBBtn>
+
+                  <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
+                    <MDBIcon fab icon='twitter' size="sm"/>
+                  </MDBBtn>
+
+                  <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
+                    <MDBIcon fab icon='google' size="sm"/>
+                  </MDBBtn>
+
+                  <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
+                    <MDBIcon fab icon='github' size="sm"/>
+                  </MDBBtn>
+
                 </div>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
-    </div>
+              </div>
+
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
 }
 
