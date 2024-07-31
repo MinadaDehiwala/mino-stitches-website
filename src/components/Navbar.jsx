@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AppBar, Toolbar, Box, IconButton, InputBase, Paper } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import './Navbar.css';
 import logo from '../assets/brand-logo.png';
+import { AuthContext } from "../context/AuthContextManager"
 
 const Navbar = () => {
+    const { authUser } = useContext(AuthContext)
     const [searchOpen, setSearchOpen] = useState(false);
 
     const handleSearchClick = () => {
@@ -20,12 +22,16 @@ const Navbar = () => {
                 <nav className="navbar-links">
                     <NavLink to="/" className={({ isActive }) => (isActive ? "active" : "")}>Home</NavLink>
                     <NavLink to="/products" className={({ isActive }) => (isActive ? "active" : "")}>Products</NavLink>
-                    <NavLink to="/cart" className={({ isActive }) => (isActive ? "active" : "")}>Cart</NavLink>
-                    <NavLink to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>Profile</NavLink>
-                    <NavLink to="/my-orders" className={({ isActive }) => (isActive ? "active" : "")}>My Orders</NavLink>
+                    {authUser !== null &&
+                        <>
+                            <NavLink to="/cart" className={({ isActive }) => (isActive ? "active" : "")}>Cart</NavLink>
+                            <NavLink to="/my-orders" className={({ isActive }) => (isActive ? "active" : "")}>My Orders</NavLink>
+                        </>}
                     <NavLink to="/chatbot" className={({ isActive }) => (isActive ? "active" : "")}>ChatBot</NavLink>
                     <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>About Us</NavLink>
-                    <NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>Login</NavLink>
+                    {authUser == null ?
+                        (<NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>Login / Signup</NavLink>)
+                        : <NavLink to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>Profile</NavLink>}
                 </nav>
                 <Box sx={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                     <IconButton onClick={handleSearchClick} sx={{ color: 'white' }}>
