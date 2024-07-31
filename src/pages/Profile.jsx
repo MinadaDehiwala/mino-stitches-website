@@ -2,15 +2,14 @@ import React, { useContext } from 'react';
 import { Box, Typography, Paper, Avatar, Button, Divider } from '@mui/material';
 import { styled } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
-import profileImage from '../assets/profile_dummy.png'; // Update with the correct path to the profile image
 import Navbar from '../components/Navbar';
 import { AuthContext } from '../context/AuthContextManager';
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-
 import { signOut } from "firebase/auth";
-import { auth } from "../configs/firebase"
+import { auth } from "../configs/firebase";
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const ProfileContainer = styled(Box)({
   display: 'flex',
@@ -55,13 +54,30 @@ const InfoItem = styled(Box)({
 
 const Profile = () => {
   const { authUser, logout } = useContext(AuthContext);
-
+  const navigate = useNavigate();
 
   const logOutButtonHandler = async () => {
-    await signOut(auth)
-    logout()
-  }
-
+    try {
+      await signOut(auth);
+      logout();
+      Swal.fire({
+        icon: 'success',
+        title: 'Logout Successful',
+        text: 'You have successfully logged out!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/');
+        }
+      });
+    } catch (error) {
+      console.error("Error logging out", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Logout Failed',
+        text: error.message,
+      });
+    }
+  };
 
   return (
     <ProfileContainer>
@@ -86,7 +102,8 @@ const Profile = () => {
           variant="contained"
           color="secondary"
           onClick={logOutButtonHandler}
-          style={{ marginTop: '10px', borderRadius: '30px', backgroundColor: '#d32f2f' }} // Set button color to red
+          style={{ marginTop: '10px', borderRadius: '30px', backgroundColor: '#d32f2f' }}
+          data-testid="logout-button" // Added unique attribute
         >
           Logout
         </Button>
