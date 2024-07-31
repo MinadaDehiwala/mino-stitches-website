@@ -4,6 +4,7 @@ import { sendPasswordResetEmail } from 'firebase/auth';
 import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBModal, MDBModalBody, MDBModalHeader, MDBInput, MDBIcon, MDBSpinner } from 'mdb-react-ui-kit';
 import Swal from 'sweetalert2';
 import { auth } from '../configs/firebase'; // Ensure you import auth for resetting passwords
+import { useNavigate } from 'react-router-dom';
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
@@ -12,6 +13,7 @@ const ManageUsers = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [editData, setEditData] = useState({});
   const db = getFirestore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -117,6 +119,9 @@ const ManageUsers = () => {
       <MDBRow className="my-4">
         <MDBCol>
           <h2 className="text-center">Manage Users</h2>
+          <MDBBtn color="secondary" onClick={() => navigate('/admin')} className="mb-4">
+            Back to Admin
+          </MDBBtn>
         </MDBCol>
       </MDBRow>
       {loading ? (

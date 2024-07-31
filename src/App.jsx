@@ -13,6 +13,7 @@ import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageUsers from "./pages/ManageUsers.jsx";
+import Admin from "./pages/Admin.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContextManager.jsx';
@@ -46,8 +47,10 @@ const router = createBrowserRouter([
     element: <ProtectedRoutes allowedRoles={['admin']} />,
     children: [
       // Admin routes
+      { path: "/admin", element: <Admin /> },
       { path: "/manage-users", element: <ManageUsers /> },
       { path: "/manage-products", element: <ManageProducts /> },
+      { path: "/manage-orders", element: <div>Manage Orders Page</div> }, // Future implementation
     ]
   }
 ]);
