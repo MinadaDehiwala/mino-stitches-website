@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../configs/firebase";
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar.jsx';
+import { AuthContext } from '../context/AuthContextManager.jsx';
 
 import {
   MDBContainer,
@@ -23,6 +24,7 @@ function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -47,6 +49,7 @@ function Login() {
       });
 
       if (userData) {
+        login(userData); // Pass the user data to the AuthContext
         Swal.fire({
           icon: 'success',
           title: 'Login Successful',
@@ -54,7 +57,6 @@ function Login() {
           timer: 2000,
           timerProgressBar: true
         }).then(() => {
-          localStorage.setItem('userType', userData.account_type);
           if (userData.account_type === 'admin') {
             navigate('/manage-users');
           } else {
@@ -119,8 +121,8 @@ function Login() {
                 </div>
               ) : (
                 <>
-                  <MDBInput wrapperClass='mb-4' label='Email address' id='form1' name='email' type='email' onChange={onChangeHandler} value={formData.email}/>
-                  <MDBInput wrapperClass='mb-4' label='Password' id='form2' name='password' type='password' onChange={onChangeHandler} value={formData.password}/>
+                  <MDBInput wrapperClass='mb-4' label='Email address' id='form1' name='email' type='email' onChange={onChangeHandler} value={formData.email} />
+                  <MDBInput wrapperClass='mb-4' label='Password' id='form2' name='password' type='password' onChange={onChangeHandler} value={formData.password} />
 
                   <div className="d-flex justify-content-between mx-3 mb-4">
                     <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' />
@@ -133,21 +135,21 @@ function Login() {
                     <p>Not a member? <a href="/signup">Register</a></p>
                     <p>or sign in with:</p>
 
-                    <div className='d-flex justify-content-between mx-auto' style={{width: '40%'}}>
+                    <div className='d-flex justify-content-between mx-auto' style={{ width: '40%' }}>
                       <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                        <MDBIcon fab icon='facebook-f' size="sm"/>
+                        <MDBIcon fab icon='facebook-f' size="sm" />
                       </MDBBtn>
 
                       <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                        <MDBIcon fab icon='twitter' size="sm"/>
+                        <MDBIcon fab icon='twitter' size="sm" />
                       </MDBBtn>
 
                       <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                        <MDBIcon fab icon='google' size="sm"/>
+                        <MDBIcon fab icon='google' size="sm" />
                       </MDBBtn>
 
                       <MDBBtn tag='a' color='none' className='m-1' style={{ color: '#1266f1' }}>
-                        <MDBIcon fab icon='github' size="sm"/>
+                        <MDBIcon fab icon='github' size="sm" />
                       </MDBBtn>
 
                     </div>

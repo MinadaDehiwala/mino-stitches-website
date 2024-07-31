@@ -1,14 +1,20 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContextManager.jsx';
 
-const ProtectedRoutes = (props) => {
-    const userType = props.isUserAuthenticated().userType;
+const ProtectedRoutes = ({ allowedRoles }) => {
+  const { authUser } = useContext(AuthContext);
+  const location = useLocation();
 
-    if (userType === "unauthenticated") {
-        return <Navigate to="/login" replace />;
-    }
+  if (!authUser) {
+    return <Navigate to="/login" state={{ from: location }} />;
+  }
 
-    return <Outlet />;
+  if (allowedRoles && !allowedRoles.includes(authUser.account_type)) {
+    return <Navigate to="/" />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoutes;

@@ -14,47 +14,50 @@ import Signup from './pages/Signup.jsx';
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageUsers from "./pages/ManageUsers.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContextManager.jsx';
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    element: <ProtectedRoutes allowedRoles={['customer', 'admin']} />,
+    children: [
+      // Customer routes
+      { path: "/products", element: <Products /> },
+      { path: "/cart", element: <Cart /> },
+      { path: "/my-orders", element: <MyOrders /> },
+      { path: "/chatBot", element: <ChatBot /> },
+      { path: "/about", element: <About /> },
+      { path: "/profile", element: <Profile /> },
+    ]
+  },
+  {
+    element: <ProtectedRoutes allowedRoles={['admin']} />,
+    children: [
+      // Admin routes
+      { path: "/manage-users", element: <ManageUsers /> },
+      { path: "/manage-products", element: <ManageProducts /> },
+    ]
+  }
+]);
 
 function App() {
-  const isUserAuthenticated = () => {
-    const userType = localStorage.getItem('userType');
-    return {
-      userType: userType || "unauthenticated" // this value can be admin/customer/unauthenticated
-    }
-  };
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      path: "/login",
-      element: <Login />,
-    },
-    {
-      path: "/signup",
-      element: <Signup />,
-    },
-    {
-      element: <ProtectedRoutes isUserAuthenticated={isUserAuthenticated} />,
-      children: [
-        // Customer routes
-        { path: "/products", element: <Products /> },
-        { path: "/cart", element: <Cart /> },
-        { path: "/my-orders", element: <MyOrders /> },
-        { path: "/chatBot", element: <ChatBot /> },
-        { path: "/about", element: <About /> },
-        { path: "/profile", element: <Profile /> },
-        // Admin routes
-        { path: "/manage-users", element: <ManageUsers /> },
-        { path: "/manage-products", element: <ManageProducts /> },
-      ]
-    }
-  ]);
-
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
+  );
 }
 
 export default App;
