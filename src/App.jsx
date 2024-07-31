@@ -1,5 +1,4 @@
-// App.js
-import React, { useContext } from 'react';
+import React from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -12,48 +11,18 @@ import ChatBot from './pages/ChatBot.jsx';
 import About from './pages/About.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
-import Navbar from './components/Navbar.jsx';
-import { AuthContext } from './context/AuthContextManager.jsx';
-
-// import admin routes
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageUsers from "./pages/ManageUsers.jsx";
-
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ProtectedRoutes from "./components/ProtectedRoutes.jsx"; // Default import
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 
 function App() {
-
   const isUserAuthenticated = () => {
+    const userType = localStorage.getItem('userType');
     return {
-      userType: "customer" // this value can be admin/customer/unauthenticated
+      userType: userType || "unauthenticated" // this value can be admin/customer/unauthenticated
     }
   };
-
-  const getRoutes = (userType) => {
-    const customers_routes = [
-      { path: "/login", element: <Login /> },
-      { path: "/products", element: <Products /> },
-      { path: "/cart", element: <Cart /> },
-      { path: "/my-orders", element: <MyOrders /> },
-      { path: "/chatBot", element: <ChatBot /> },
-      { path: "/about", element: <About /> },
-      { path: "/signup", element: <Signup /> },
-      { path: "/profile", element: <Profile /> },
-    ];
-
-    const admins_routes = [
-      { path: "/manager-users", element: <ManageUsers /> },
-      { path: "/manage-products", element: <ManageProducts /> },
-    ];
-
-    if (userType === "customer") {
-      return customers_routes;
-    } else if (userType === "admin") {
-      return admins_routes;
-    }
-  };
-
 
   const router = createBrowserRouter([
     {
@@ -61,9 +30,28 @@ function App() {
       element: <Home />,
     },
     {
-      element: <ProtectedRoutes isUserAuthenticated={isUserAuthenticated} />,
-      children: getRoutes(isUserAuthenticated().userType),
+      path: "/login",
+      element: <Login />,
     },
+    {
+      path: "/signup",
+      element: <Signup />,
+    },
+    {
+      element: <ProtectedRoutes isUserAuthenticated={isUserAuthenticated} />,
+      children: [
+        // Customer routes
+        { path: "/products", element: <Products /> },
+        { path: "/cart", element: <Cart /> },
+        { path: "/my-orders", element: <MyOrders /> },
+        { path: "/chatBot", element: <ChatBot /> },
+        { path: "/about", element: <About /> },
+        { path: "/profile", element: <Profile /> },
+        // Admin routes
+        { path: "/manage-users", element: <ManageUsers /> },
+        { path: "/manage-products", element: <ManageProducts /> },
+      ]
+    }
   ]);
 
   return <RouterProvider router={router} />;

@@ -3,7 +3,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../configs/firebase";
 import { collection, addDoc } from 'firebase/firestore'; 
 import Swal from 'sweetalert2';
-
+import Navbar from '../components/Navbar.jsx';
+import { useNavigate } from 'react-router-dom';
 import {
   MDBBtn,
   MDBContainer,
@@ -12,10 +13,12 @@ import {
   MDBCard,
   MDBCardBody,
   MDBInput,
-  MDBCheckbox
+  MDBCheckbox,
+  MDBSpinner
 } from 'mdb-react-ui-kit';
 
 function Signup() {
+  const navigate = useNavigate();
   const usersCollection = collection(db, "users");
 
   const [formData, setFormData] = useState({
@@ -24,6 +27,8 @@ function Signup() {
     email: "",
     password: ""
   });
+
+  const [loading, setLoading] = useState(false);
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -34,6 +39,7 @@ function Signup() {
   };
 
   const signIn = async () => {
+    setLoading(true);
     try {
       const result = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       if (result !== null) {
@@ -47,6 +53,10 @@ function Signup() {
           icon: 'success',
           title: 'Sign Up Successful',
           text: 'You have successfully signed up!',
+          timer: 2000, // Auto close after 2 seconds
+          timerProgressBar: true
+        }).then(() => {
+          navigate('/');
         });
       }
     } catch (error) {
@@ -56,6 +66,8 @@ function Signup() {
         title: 'Sign Up Failed',
         text: error.message,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,6 +85,7 @@ function Signup() {
       alignItems: 'center',
       justifyContent: 'center'
     }}>
+      <Navbar />
       <MDBRow>
         <MDBCol md='6' className='text-center text-md-start d-flex flex-column justify-content-center'>
           <h1 className="my-5 display-3 fw-bold ls-tight px-3">
@@ -88,55 +101,66 @@ function Signup() {
           <MDBCard className='my-5' style={{ width: '80%', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
             <MDBCardBody className='p-5'>
               <h2 className='text-center mb-4'>Sign Up</h2>
-              <MDBRow>
-                <MDBCol col='6'>
+              {loading ? (
+                <div className="text-center">
+                  <MDBSpinner grow color="primary">
+                    <span className="visually-hidden">We are Signing you up...</span>
+                  </MDBSpinner>
+                  <p>We are Signing you up...</p>
+                </div>
+              ) : (
+                <>
+                  <MDBRow>
+                    <MDBCol col='6'>
+                      <MDBInput
+                        wrapperClass='mb-4'
+                        onChange={onChangeHandler}
+                        value={formData.firstName}
+                        label='First name'
+                        id='form1'
+                        name='firstName'
+                        type='text'
+                      />
+                    </MDBCol>
+                    <MDBCol col='6'>
+                      <MDBInput
+                        wrapperClass='mb-4'
+                        onChange={onChangeHandler}
+                        value={formData.lastName}
+                        label='Last name'
+                        id='form1'
+                        name='lastName'
+                        type='text'
+                      />
+                    </MDBCol>
+                  </MDBRow>
                   <MDBInput
                     wrapperClass='mb-4'
                     onChange={onChangeHandler}
-                    value={formData.firstName}
-                    label='First name'
+                    value={formData.email}
+                    label='Email'
                     id='form1'
-                    name='firstName'
-                    type='text'
+                    name='email'
+                    type='email'
                   />
-                </MDBCol>
-                <MDBCol col='6'>
                   <MDBInput
                     wrapperClass='mb-4'
                     onChange={onChangeHandler}
-                    value={formData.lastName}
-                    label='Last name'
+                    value={formData.password}
+                    label='Password'
                     id='form1'
-                    name='lastName'
-                    type='text'
+                    name='password'
+                    type='password'
                   />
-                </MDBCol>
-              </MDBRow>
-              <MDBInput
-                wrapperClass='mb-4'
-                onChange={onChangeHandler}
-                value={formData.email}
-                label='Email'
-                id='form1'
-                name='email'
-                type='email'
-              />
-              <MDBInput
-                wrapperClass='mb-4'
-                onChange={onChangeHandler}
-                value={formData.password}
-                label='Password'
-                id='form1'
-                name='password'
-                type='password'
-              />
-              <div className='d-flex justify-content-center mb-4'>
-                <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
-              </div>
-              <MDBBtn className='w-100 mb-4' size='md' onClick={signInOnClickHandler}>Sign up</MDBBtn>
-              <div className="text-center">
-                <p>Already a member? <a href="/login">Login</a></p>
-              </div>
+                  <div className='d-flex justify-content-center mb-4'>
+                    <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
+                  </div>
+                  <MDBBtn className='w-100 mb-4' size='md' onClick={signInOnClickHandler}>Sign up</MDBBtn>
+                  <div className="text-center">
+                    <p>Already a member? <a href="/login">Login</a></p>
+                  </div>
+                </>
+              )}
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
