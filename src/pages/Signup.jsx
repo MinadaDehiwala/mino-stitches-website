@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../configs/firebase";
-import { collection, addDoc } from 'firebase/firestore'; 
+import { collection, addDoc } from 'firebase/firestore';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
+
 
 import {
   MDBBtn,
@@ -16,6 +18,7 @@ import {
 } from 'mdb-react-ui-kit';
 
 function Signup() {
+  const navigate = useNavigate()
   const usersCollection = collection(db, "users");
 
   const [formData, setFormData] = useState({
@@ -43,11 +46,15 @@ function Signup() {
           account_type: "customer",
           uid: auth.currentUser.uid
         });
-        Swal.fire({
+        const swalResult = await Swal.fire({
           icon: 'success',
           title: 'Sign Up Successful',
           text: 'You have successfully signed up!',
         });
+
+        if (swalResult.isConfirmed) {
+          navigate("/")
+        }
       }
     } catch (error) {
       console.error("Error signing up or storing user data", error);
@@ -64,7 +71,7 @@ function Signup() {
   };
 
   return (
-    <MDBContainer fluid className='p-4' style={{ 
+    <MDBContainer fluid className='p-4' style={{
       backgroundImage: 'url(/src/assets/login_signup_background.png)',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
