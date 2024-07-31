@@ -22,13 +22,10 @@ import ManageUsers from "./pages/ManageUsers.jsx";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx"; // Default import
 
+
 function App() {
 
-  const isUserAuthenticated = () => {
-    return {
-      userType: "customer" // this value can be admin/customer/unauthenticated
-    }
-  };
+  const { authUser } = useContext(AuthContext)
 
   const getRoutes = (userType) => {
     const customers_routes = [
@@ -47,11 +44,23 @@ function App() {
       { path: "/manage-products", element: <ManageProducts /> },
     ];
 
-    if (userType === "customer") {
+    const unauthenticated_user_routes = [
+      { path: "/signup", element: <Signup /> },
+      { path: "/login", element: <Login /> },
+      { path: "/products", element: <Products /> },
+      { path: "/chatBot", element: <ChatBot /> },
+      { path: "/about", element: <About /> },
+    ];
+
+
+    if (userType === null) {
+      return unauthenticated_user_routes
+    } else if (userType === "customer") {
       return customers_routes;
     } else if (userType === "admin") {
       return admins_routes;
     }
+
   };
 
 
@@ -61,8 +70,8 @@ function App() {
       element: <Home />,
     },
     {
-      element: <ProtectedRoutes isUserAuthenticated={isUserAuthenticated} />,
-      children: getRoutes(isUserAuthenticated().userType),
+      element: <ProtectedRoutes userType={authUser?.userType || null} />,
+      children: getRoutes(authUser?.userType || null),
     },
   ]);
 

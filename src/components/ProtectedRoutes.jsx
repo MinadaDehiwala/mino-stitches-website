@@ -4,10 +4,10 @@ import Login from '../pages/Login.jsx';
 
 
 const ProtectedRoutes = (props) => {
-    //todo: change the code check if the type
-    if (props.isUserAuthenticated().userType == "unauthenticated") {
-        return <Navigate to="/login" replace />;
-    }
+    // //todo: change the code check if the type
+    // if (props.userType === null) {
+    //     return <Navigate to="/login" replace />;
+    // }
 
     return <Outlet />;
 };
