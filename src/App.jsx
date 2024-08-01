@@ -11,11 +11,14 @@ import ChatBot from './pages/ChatBot.jsx';
 import About from './pages/About.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
-import ManageProducts from "./pages/ManageProducts.jsx";
-import ManageUsers from "./pages/ManageUsers.jsx";
-import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-
+import ManageProducts from './pages/ManageProducts.jsx';
+import ManageUsers from './pages/ManageUsers.jsx';
+import Admin from './pages/Admin.jsx';
+import AddProduct from './pages/AddProduct.jsx';
+import EditProduct from './pages/EditProduct.jsx';
+import ProtectedRoutes from './components/ProtectedRoutes.jsx';
+import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContextManager.jsx';
 
 const router = createBrowserRouter([
   {
@@ -55,8 +58,11 @@ const router = createBrowserRouter([
     element: <ProtectedRoutes allowedRoles={['admin']} />,
     children: [
       // Admin routes
+      { path: "/admin", element: <Admin /> },
       { path: "/manage-users", element: <ManageUsers /> },
       { path: "/manage-products", element: <ManageProducts /> },
+      { path: "/add-product", element: <AddProduct /> },
+      { path: "/edit-product/:id", element: <EditProduct /> },
     ]
   }
 ]);

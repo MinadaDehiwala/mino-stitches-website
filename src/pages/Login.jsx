@@ -62,7 +62,7 @@ function Login() {
           timerProgressBar: true
         }).then(() => {
           if (userData.account_type === 'admin') {
-            navigate('/manage-users');
+            navigate('/admin');
           } else {
             navigate('/');
           }
