@@ -5,6 +5,8 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import Home from './pages/Home.jsx';
 import Products from './pages/Products.jsx';
 import Cart from './pages/Cart.jsx';
+import Checkout from './pages/Checkout.jsx';
+import Invoice from './pages/Invoice.jsx';
 import Profile from './pages/Profile.jsx';
 import MyOrders from './pages/MyOrders.jsx';
 import ChatBot from './pages/ChatBot.jsx';
@@ -17,8 +19,8 @@ import Admin from './pages/Admin.jsx';
 import AddProduct from './pages/AddProduct.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
-import { createBrowserRouter, RouterProvider, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContextManager.jsx';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContextManager';
 
 const router = createBrowserRouter([
   {
@@ -36,9 +38,10 @@ const router = createBrowserRouter([
   {
     element: <ProtectedRoutes allowedRoles={['customer', 'admin']} />,
     children: [
-      // Customer routes
       { path: "/products", element: <Products /> },
       { path: "/cart", element: <Cart /> },
+      { path: "/order-summary", element: <Checkout /> },
+      { path: "/invoice", element: <Invoice /> },
       { path: "/my-orders", element: <MyOrders /> },
       { path: "/chatBot", element: <ChatBot /> },
       { path: "/about", element: <About /> },
@@ -48,7 +51,6 @@ const router = createBrowserRouter([
   {
     element: <ProtectedRoutes allowedRoles={['admin']} />,
     children: [
-      // Admin routes
       { path: "/admin", element: <Admin /> },
       { path: "/manage-users", element: <ManageUsers /> },
       { path: "/manage-products", element: <ManageProducts /> },
