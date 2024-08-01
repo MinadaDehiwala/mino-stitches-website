@@ -1,13 +1,19 @@
-import React from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import Login from '../pages/Login.jsx';
+import React, { useContext } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContextManager.jsx';
+
+const ProtectedRoutes = ({ allowedRoles }) => {
+    const { authUser } = useContext(AuthContext);
+    const location = useLocation();
 
 
-const ProtectedRoutes = (props) => {
-    // //todo: change the code check if the type
-    // if (props.userType === null) {
-    //     return <Navigate to="/login" replace />;
-    // }
+    if (!authUser) {
+        return <Navigate to="/login" state={{ from: location }} />;
+    }
+
+    if (allowedRoles && !allowedRoles.includes(authUser.account_type)) {
+        return <Navigate to="/" />;
+    }
 
     return <Outlet />;
 };

@@ -1,9 +1,10 @@
 // src/pages/Home.jsx
-import React from 'react';
+import React, { useContext } from 'react';
 import Navbar from '../components/Navbar';
 import { Typography, Box, Button } from '@mui/material';
 import './Home.css';
 import homeImage from '../assets/home-1.png';
+import { AuthContext } from '../context/AuthContextManager';
 
 const Home = () => {
   return (

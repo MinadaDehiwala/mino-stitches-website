@@ -1,5 +1,4 @@
-// App.js
-import React, { useContext } from 'react';
+import React from 'react';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -12,70 +11,60 @@ import ChatBot from './pages/ChatBot.jsx';
 import About from './pages/About.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
-import Navbar from './components/Navbar.jsx';
-import { AuthContext } from './context/AuthContextManager.jsx';
-
-// import admin routes
 import ManageProducts from "./pages/ManageProducts.jsx";
 import ManageUsers from "./pages/ManageUsers.jsx";
-
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ProtectedRoutes from "./components/ProtectedRoutes.jsx"; // Default import
 
 
-function App() {
-
-  const { authUser } = useContext(AuthContext)
-
-  const getRoutes = (userType) => {
-    const customers_routes = [
-      { path: "/login", element: <Login /> },
-      { path: "/products", element: <Products /> },
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
+    path: "/products",
+    element: <Products />,
+  },
+  {
+    path: "/chatBot",
+    element: <ChatBot />,
+  },
+  {
+    path: "/about",
+    element: <About />,
+  },
+  {
+    element: <ProtectedRoutes allowedRoles={['customer', 'admin']} />,
+    children: [
+      // Customer routes
       { path: "/cart", element: <Cart /> },
       { path: "/my-orders", element: <MyOrders /> },
-      { path: "/chatBot", element: <ChatBot /> },
-      { path: "/about", element: <About /> },
-      { path: "/signup", element: <Signup /> },
       { path: "/profile", element: <Profile /> },
-    ];
-
-    const admins_routes = [
-      { path: "/manager-users", element: <ManageUsers /> },
+    ]
+  },
+  {
+    element: <ProtectedRoutes allowedRoles={['admin']} />,
+    children: [
+      // Admin routes
+      { path: "/manage-users", element: <ManageUsers /> },
       { path: "/manage-products", element: <ManageProducts /> },
-    ];
+    ]
+  }
+]);
 
-    const unauthenticated_user_routes = [
-      { path: "/signup", element: <Signup /> },
-      { path: "/login", element: <Login /> },
-      { path: "/products", element: <Products /> },
-      { path: "/chatBot", element: <ChatBot /> },
-      { path: "/about", element: <About /> },
-    ];
-
-
-    if (userType === null) {
-      return unauthenticated_user_routes
-    } else if (userType === "customer") {
-      return customers_routes;
-    } else if (userType === "admin") {
-      return admins_routes;
-    }
-
-  };
-
-
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      element: <ProtectedRoutes userType={authUser?.userType || null} />,
-      children: getRoutes(authUser?.userType || null),
-    },
-  ]);
-
-  return <RouterProvider router={router} />;
+function App() {
+  return (
+    <RouterProvider router={router} />
+  );
 }
 
 export default App;

@@ -3,10 +3,12 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import './About.css';
 import aboutImage from '../assets/about-2.png';
+import Navbar from '../components/Navbar.jsx';
 
 const About = () => {
   return (
     <div className="about-container">
+      <Navbar />
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
