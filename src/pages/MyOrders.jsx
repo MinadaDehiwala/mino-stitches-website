@@ -1,116 +1,71 @@
-import React from 'react';
-import { Box, Typography, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider, Button } from '@mui/material';
-import { styled } from '@mui/system';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import React, { useEffect, useState, useContext } from "react";
+import { MDBCard, MDBCardBody, MDBContainer, MDBRow, MDBCol, MDBTypography } from "mdb-react-ui-kit";
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { AuthContext } from '../context/AuthContextManager';
 import Navbar from '../components/Navbar';
-import p1 from '../assets/p1.png';
-import p2 from '../assets/p2.png';
-import p3 from '../assets/p3.png';
-
-
-const MyOrdersContainer = styled(Box)({
-  padding: '40px',
-  backgroundColor: '#f5f7fa',
-  minHeight: '100vh',
-  marginTop: '80px', // Added margin top to bring the page down
-});
-
-const OrderList = styled(List)({
-  width: '100%',
-  backgroundColor: '#fff',
-  borderRadius: '10px',
-  boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-});
-
-const orders = [
-  {
-    id: 1,
-    number: 'ORD123456',
-    date: '2024-07-01',
-    items: [
-      { name: 'Product 1', image: p1 },
-      { name: 'Product 2', image: p2 },
-    ],
-    total: 'LKR 4998',
-  },
-  {
-    id: 2,
-    number: 'ORD123457',
-    date: '2024-07-10',
-    items: [{ name: 'Product 3', image: p3 }],
-    total: 'LKR 3999',
-  },
-  {
-    id: 3,
-    number: 'ORD123458',
-    date: '2024-07-15',
-    items: [
-      { name: 'Product 1', image: p1 },
-      { name: 'Product 2', image: p2 },
-      { name: 'Product 3', image: p3 },
-    ],
-    total: 'LKR 12996',
-  },
-];
 
 const MyOrders = () => {
+  const [orders, setOrders] = useState([]);
+  const { authUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!authUser) return;
+
+      try {
+        const db = getFirestore();
+        const ordersRef = collection(db, 'orders');
+        const q = query(ordersRef, where('userId', '==', authUser.uid));
+        const querySnapshot = await getDocs(q);
+        const ordersList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setOrders(ordersList);
+      } catch (error) {
+        console.error('Error fetching orders: ', error);
+      }
+    };
+
+    fetchOrders();
+  }, [authUser]);
+
   return (
-    <MyOrdersContainer>
+    <>
       <Navbar />
-      <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-        My Orders
-      </Typography>
-      <OrderList>
-        {orders.map((order) => (
-          <React.Fragment key={order.id}>
-            <ListItem alignItems="flex-start">
-              <ListItemText
-                primary={`Order Number: ${order.number}`}
-                secondary={
-                  <>
-                    <Typography component="span" variant="body2" color="textPrimary">
-                      Date: {order.date}
-                    </Typography>
-                    <br />
-                    <Typography component="span" variant="body2" color="textPrimary">
-                      Items:
-                    </Typography>
-                    <List>
-                      {order.items.map((item, index) => (
-                        <ListItem key={index}>
-                          <ListItemAvatar>
-                            <Avatar src={item.image} />
-                          </ListItemAvatar>
-                          <ListItemText primary={item.name} />
-                        </ListItem>
-                      ))}
-                    </List>
-                    <Typography component="span" variant="body2" color="primary">
-                      Total: {order.total}
-                    </Typography>
-                  </>
-                }
-              />
-              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<EditIcon />}
-                  style={{ marginBottom: '10px' }}
-                >
-                  Edit
-                </Button>
-                <Button variant="contained" color="secondary" startIcon={<DeleteIcon />}>
-                  Delete
-                </Button>
-              </Box>
-            </ListItem>
-            <Divider component="li" />
-          </React.Fragment>
-        ))}
-      </OrderList>
-    </MyOrdersContainer>
+      <MDBContainer className="py-5">
+        <MDBTypography tag="h2" className="mb-4 text-center">
+          My Orders
+        </MDBTypography>
+        {orders.length > 0 ? (
+          orders.map((order) => (
+            <MDBCard className="mb-4" key={order.id}>
+              <MDBCardBody>
+                <MDBRow>
+                  <MDBCol md="6">
+                    <MDBTypography tag="h5">Order #{order.id}</MDBTypography>
+                    <MDBTypography className="text-muted">{new Date(order.date.seconds * 1000).toLocaleDateString()}</MDBTypography>
+                  </MDBCol>
+                  <MDBCol md="6">
+                    <MDBTypography className="float-end fw-bold">Total: LKR {order.totalPrice.toFixed(2)}</MDBTypography>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                {order.items.map((item, index) => (
+                  <MDBRow key={index}>
+                    <MDBCol md="8">
+                      <p>{item.name}</p>
+                    </MDBCol>
+                    <MDBCol md="4">
+                      <p className="float-end">LKR {item.price.toFixed(2)}</p>
+                    </MDBCol>
+                  </MDBRow>
+                ))}
+              </MDBCardBody>
+            </MDBCard>
+          ))
+        ) : (
+          <p className="text-center">You have no orders.</p>
+        )}
+      </MDBContainer>
+    </>
   );
 };
 
