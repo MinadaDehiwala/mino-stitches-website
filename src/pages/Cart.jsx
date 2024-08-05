@@ -26,21 +26,19 @@ import { styled } from '@mui/system'; // Import styled from MUI
 // Styled component for the black bar
 const BlackBar = styled(Box)({
   backgroundColor: '#000', // Black color
-  height: '160px', // Increased height for better spacing
+  height: '160px', // Adjusted height for consistency
   width: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  zIndex: 1000, // Ensure it's above other elements
   color: '#fff', // White text color
   fontSize: '24px', // Adjust text size as needed
   fontWeight: 'bold',
   padding: '0 20px',
   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Added shadow for a subtle effect
+  marginBottom: '20px', // Add some margin below the bar
 });
+
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);

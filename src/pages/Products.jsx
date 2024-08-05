@@ -16,10 +16,6 @@ const BlackBar = styled(Box)({
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  zIndex: 1000, // Ensure it's above other elements
   color: '#fff', // White text color
   fontSize: '20px', // Adjust text size as needed
   padding: '0 20px',
@@ -30,7 +26,7 @@ const ProductContainer = styled(Box)({
   padding: '40px 20px',
   backgroundColor: '#f9fafb', // Softer background color
   minHeight: '100vh',
-  marginTop: '320px', // Adjusted for black bar and navbar
+  marginTop: '20px', // Adjusted to remove fixed position offset
 });
 
 const CategoryButton = styled(Button)({
@@ -144,7 +140,8 @@ const Products = () => {
   }
 
   return (
-    <ProductContainer>
+    <Box>
+      <Navbar />
       <BlackBar>
         <Box mt={8}> {/* Move the text and buttons down */}
           <Typography variant="h4" component="div">
@@ -166,51 +163,52 @@ const Products = () => {
           </CategoryButton>
         </Box>
       </BlackBar>
-      <Navbar />
-      <Container>
-        <Typography variant="h4" component="h1" gutterBottom textAlign="center" sx={{ marginBottom: '20px', fontWeight: 'bold' }}>
-          Our Products
-        </Typography>
-        <Grid container spacing={4}>
-          {products.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
-              <ProductCard>
-                <CardMedia
-                  component="img"
-                  image={product.image}
-                  alt={product.name}
-                  sx={{
-                    height: '200px', // Set a fixed height
-                    objectFit: 'contain', // Contain image within the box
-                    borderRadius: '4px', // Add some rounding for aesthetics
-                  }}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
-                    {product.name}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary" component="p" sx={{ marginBottom: '15px', color: '#666' }}>
-                    {product.description}
-                  </Typography>
-                  <Typography variant="h6" component="div" color="primary" sx={{ marginTop: '10px', fontWeight: 'bold' }}>
-                    LKR {product.price}
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<ShoppingCartIcon />}
-                    sx={{ marginTop: '10px', padding: '10px 20px', borderRadius: '20px' }}
-                    onClick={() => addToCart(product)}
-                  >
-                    Add to Cart
-                  </Button>
-                </CardContent>
-              </ProductCard>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </ProductContainer>
+      <ProductContainer>
+        <Container>
+          <Typography variant="h4" component="h1" gutterBottom textAlign="center" sx={{ marginBottom: '20px', fontWeight: 'bold' }}>
+            Our Products
+          </Typography>
+          <Grid container spacing={4}>
+            {products.map((product) => (
+              <Grid item xs={12} sm={6} md={4} key={product.id}>
+                <ProductCard>
+                  <CardMedia
+                    component="img"
+                    image={product.image}
+                    alt={product.name}
+                    sx={{
+                      height: '200px', // Set a fixed height
+                      objectFit: 'contain', // Contain image within the box
+                      borderRadius: '4px', // Add some rounding for aesthetics
+                    }}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
+                      {product.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p" sx={{ marginBottom: '15px', color: '#666' }}>
+                      {product.description}
+                    </Typography>
+                    <Typography variant="h6" component="div" color="primary" sx={{ marginTop: '10px', fontWeight: 'bold' }}>
+                      LKR {product.price}
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<ShoppingCartIcon />}
+                      sx={{ marginTop: '10px', padding: '10px 20px', borderRadius: '20px' }}
+                      onClick={() => addToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
+                  </CardContent>
+                </ProductCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </ProductContainer>
+    </Box>
   );
 };
 
