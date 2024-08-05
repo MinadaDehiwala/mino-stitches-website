@@ -3,6 +3,27 @@ import { MDBCard, MDBCardBody, MDBContainer, MDBRow, MDBCol, MDBTypography } fro
 import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { AuthContext } from '../context/AuthContextManager';
 import Navbar from '../components/Navbar';
+import { Box } from '@mui/material';
+import { styled } from '@mui/system';
+
+// Styled component for the black bar
+const BlackBar = styled(Box)({
+  backgroundColor: '#000', // Black color
+  height: '160px', // Adjusted height for consistency
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  zIndex: 1000, // Ensure it's above other elements
+  color: '#fff', // White text color
+  fontSize: '24px', // Adjust text size as needed
+  fontWeight: 'bold',
+  padding: '0 20px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Added shadow for a subtle effect
+});
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -30,7 +51,14 @@ const MyOrders = () => {
   return (
     <>
       <Navbar />
-      <MDBContainer className="py-5">
+      <BlackBar>
+        <Box mt={10}> {/* Increased margin to move text down */}
+          <MDBTypography tag="h4" className="text-white">
+            My Orders
+          </MDBTypography>
+        </Box>
+      </BlackBar>
+      <MDBContainer className="py-5" style={{ marginTop: '160px' }}> {/* Adjusted marginTop */}
         <MDBTypography tag="h2" className="mb-4 text-center">
           My Orders
         </MDBTypography>

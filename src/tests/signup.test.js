@@ -13,7 +13,7 @@ import assert from 'assert';
         // Find form elements and fill them out
         await driver.findElement(By.name('firstName')).sendKeys('test');
         await driver.findElement(By.name('lastName')).sendKeys('example');
-        await driver.findElement(By.name('email')).sendKeys('test3@example.com');
+        await driver.findElement(By.name('email')).sendKeys('test7@example.com');
         await driver.findElement(By.name('password')).sendKeys('Test@123456');
 
         // Click the sign-up button

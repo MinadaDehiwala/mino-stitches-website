@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Grid, Card, CardContent, CardMedia, Typography, Button, CircularProgress } from '@mui/material';
+import { Box, Grid, Card, CardContent, CardMedia, Typography, Button, CircularProgress, Container } from '@mui/material';
 import Navbar from '../components/Navbar';
 import { styled } from '@mui/system';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -7,11 +7,52 @@ import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from 'firebase
 import { AuthContext } from '../context/AuthContextManager'; // Import the AuthContext
 import Swal from 'sweetalert2';
 
+// Styled components
+const BlackBar = styled(Box)({
+  backgroundColor: '#000', // Black color
+  height: '240px', // 4x the original height
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  zIndex: 1000, // Ensure it's above other elements
+  color: '#fff', // White text color
+  fontSize: '20px', // Adjust text size as needed
+  padding: '0 20px',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Added shadow for a subtle effect
+});
+
 const ProductContainer = styled(Box)({
-  padding: '40px',
-  backgroundColor: '#f5f7fa',
+  padding: '40px 20px',
+  backgroundColor: '#f9fafb', // Softer background color
   minHeight: '100vh',
-  marginTop: '80px', // Added margin top to bring the page down
+  marginTop: '320px', // Adjusted for black bar and navbar
+});
+
+const CategoryButton = styled(Button)({
+  margin: '10px',
+  backgroundColor: '#FF4081',
+  color: '#fff',
+  padding: '10px 20px',
+  borderRadius: '20px',
+  fontSize: '14px',
+  textTransform: 'uppercase',
+  fontWeight: 'bold',
+  '&:hover': {
+    backgroundColor: '#F50057',
+  },
+});
+
+const ProductCard = styled(Card)({
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  transition: 'transform 0.2s',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+  },
 });
 
 const Products = () => {
@@ -81,6 +122,19 @@ const Products = () => {
     }
   };
 
+  const handleCategoryClick = (category) => {
+    if (category === 'Hoop Stitches') {
+      // Implement category filtering logic here
+      console.log(`Selected Category: ${category}`);
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: 'Coming Soon',
+        text: `The ${category} category is coming soon!`,
+      });
+    }
+  };
+
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
@@ -91,39 +145,71 @@ const Products = () => {
 
   return (
     <ProductContainer>
+      <BlackBar>
+        <Box mt={8}> {/* Move the text and buttons down */}
+          <Typography variant="h4" component="div">
+            Welcome to Mino Stitches
+          </Typography>
+        </Box>
+        <Box mt={2}>
+          <CategoryButton onClick={() => handleCategoryClick('Hoop Stitches')}>
+            Hoop Stitches
+          </CategoryButton>
+          <CategoryButton onClick={() => handleCategoryClick('Key Chains')}>
+            Key Chains
+          </CategoryButton>
+          <CategoryButton onClick={() => handleCategoryClick('Jewellery')}>
+            Jewellery
+          </CategoryButton>
+          <CategoryButton onClick={() => handleCategoryClick('Customized')}>
+            Customized
+          </CategoryButton>
+        </Box>
+      </BlackBar>
       <Navbar />
-      <Typography variant="h4" component="h1" gutterBottom textAlign="center">
-        Our Products
-      </Typography>
-      <Grid container spacing={4}>
-        {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
-            <Card>
-              <CardMedia component="img" height="200" image={product.image} alt={product.name} />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {product.name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  {product.description}
-                </Typography>
-                <Typography variant="h6" component="div" color="primary" style={{ marginTop: '10px' }}>
-                  LKR {product.price}
-                </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<ShoppingCartIcon />}
-                  style={{ marginTop: '10px' }}
-                  onClick={() => addToCart(product)}
-                >
-                  Add to Cart
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <Container>
+        <Typography variant="h4" component="h1" gutterBottom textAlign="center" sx={{ marginBottom: '20px', fontWeight: 'bold' }}>
+          Our Products
+        </Typography>
+        <Grid container spacing={4}>
+          {products.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
+              <ProductCard>
+                <CardMedia
+                  component="img"
+                  image={product.image}
+                  alt={product.name}
+                  sx={{
+                    height: '200px', // Set a fixed height
+                    objectFit: 'contain', // Contain image within the box
+                    borderRadius: '4px', // Add some rounding for aesthetics
+                  }}
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div" sx={{ fontWeight: 'bold', color: '#333' }}>
+                    {product.name}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" component="p" sx={{ marginBottom: '15px', color: '#666' }}>
+                    {product.description}
+                  </Typography>
+                  <Typography variant="h6" component="div" color="primary" sx={{ marginTop: '10px', fontWeight: 'bold' }}>
+                    LKR {product.price}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<ShoppingCartIcon />}
+                    sx={{ marginTop: '10px', padding: '10px 20px', borderRadius: '20px' }}
+                    onClick={() => addToCart(product)}
+                  >
+                    Add to Cart
+                  </Button>
+                </CardContent>
+              </ProductCard>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </ProductContainer>
   );
 };
