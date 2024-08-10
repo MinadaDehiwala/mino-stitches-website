@@ -49,11 +49,11 @@ const ManageProducts = () => {
   };
 
   return (
-    <MDBContainer>
+    <MDBContainer style={{ color: 'black' }}>
       <MDBRow className="my-4">
         <MDBCol>
           <h2 className="text-center">Manage Products</h2>
-          <MDBBtn color="secondary" onClick={() => navigate('/admin')} className="mb-4">
+          <MDBBtn color="dark" onClick={() => navigate('/admin')} className="mb-4">
             Back to Admin
           </MDBBtn>
           <MDBBtn color="primary" onClick={() => navigate('/add-product')} className="mb-4">

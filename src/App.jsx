@@ -20,7 +20,6 @@ import AddProduct from './pages/AddProduct.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContextManager';
 
 const router = createBrowserRouter([
   {
@@ -66,6 +65,8 @@ const router = createBrowserRouter([
       { path: "/manage-products", element: <ManageProducts /> },
       { path: "/add-product", element: <AddProduct /> },
       { path: "/edit-product/:id", element: <EditProduct /> },
+      { path: "/manage-orders", element: <MyOrders /> }, // Added this route for managing orders
+      { path: "/manage-orders/:id", element: <MyOrders /> }, // This handles viewing individual orders
     ]
   }
 ]);
