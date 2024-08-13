@@ -8,7 +8,7 @@ const Admin = () => {
 
   const navigateToManageUsers = () => navigate('/manage-users');
   const navigateToManageProducts = () => navigate('/manage-products');
-  const navigateToManageOrders = () => navigate('/manage-orders'); // Updated path
+  const navigateToManageOrders = () => navigate('/orders'); // Updated path
 
   return (
     <MDBContainer

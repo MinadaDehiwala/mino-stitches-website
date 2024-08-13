@@ -8,7 +8,7 @@ import Cart from './pages/Cart.jsx';
 import Checkout from './pages/Checkout.jsx';
 import Invoice from './pages/Invoice.jsx';
 import Profile from './pages/Profile.jsx';
-import MyOrders from './pages/MyOrders.jsx';
+import MyOrders from './pages/MyOrders.jsx'; // Ensure the file name matches exactly
 import ChatBot from './pages/ChatBot.jsx';
 import About from './pages/About.jsx';
 import Login from './pages/Login.jsx';
@@ -18,6 +18,7 @@ import ManageUsers from './pages/ManageUsers.jsx';
 import Admin from './pages/Admin.jsx';
 import AddProduct from './pages/AddProduct.jsx';
 import EditProduct from './pages/EditProduct.jsx';
+import Orders from './pages/orders.jsx'; // Match the file name with the actual file in the filesystem
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -53,7 +54,7 @@ const router = createBrowserRouter([
       { path: "/cart", element: <Cart /> },
       { path: "/order-summary", element: <Checkout /> },
       { path: "/invoice", element: <Invoice /> },
-      { path: "/my-orders", element: <MyOrders /> },
+      { path: "/my-orders", element: <MyOrders /> }, // Ensure this is correct
       { path: "/profile", element: <Profile /> },
     ]
   },
@@ -65,8 +66,7 @@ const router = createBrowserRouter([
       { path: "/manage-products", element: <ManageProducts /> },
       { path: "/add-product", element: <AddProduct /> },
       { path: "/edit-product/:id", element: <EditProduct /> },
-      { path: "/manage-orders", element: <MyOrders /> }, // Added this route for managing orders
-      { path: "/manage-orders/:id", element: <MyOrders /> }, // This handles viewing individual orders
+      { path: "/orders", element: <Orders /> }, // Correctly reference the Orders component
     ]
   }
 ]);

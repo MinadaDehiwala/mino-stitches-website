@@ -1,5 +1,5 @@
-// src/pages/Home.jsx
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Typography, Box, Button } from '@mui/material';
 import './Home.css';
@@ -7,6 +7,12 @@ import homeImage from '../assets/home-1.png';
 import { AuthContext } from '../context/AuthContextManager';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleShopNowClick = () => {
+    navigate('/products');
+  };
+
   return (
     <div className="home-container">
       <Navbar />
@@ -20,7 +26,12 @@ const Home = () => {
           <Typography variant="h5" component="p" gutterBottom>
             Your one-stop shop for all things embroidery!
           </Typography>
-          <Button variant="contained" sx={{ backgroundColor: 'white', color: 'black' }} size="large">
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: 'white', color: 'black' }}
+            size="large"
+            onClick={handleShopNowClick}
+          >
             Shop Now
           </Button>
         </div>

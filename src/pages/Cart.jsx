@@ -21,24 +21,28 @@ import Navbar from '../components/Navbar';
 import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { AuthContext } from '../context/AuthContextManager';
 import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/system'; // Import styled from MUI
+import { styled } from '@mui/system'; 
+
+// Importing the payment method images
+import ezCashLogo from '../assets/ezcash.png'; 
+import mCashLogo from '../assets/mcash.png';
+import paypalLogo from '../assets/paypal.png'; 
 
 // Styled component for the black bar
 const BlackBar = styled(Box)({
-  backgroundColor: '#000', // Black color
-  height: '160px', // Adjusted height for consistency
+  backgroundColor: '#000', 
+  height: '160px', 
   width: '100%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  color: '#fff', // White text color
-  fontSize: '24px', // Adjust text size as needed
+  color: '#fff', 
+  fontSize: '24px', 
   fontWeight: 'bold',
   padding: '0 20px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Added shadow for a subtle effect
-  marginBottom: '20px', // Add some margin below the bar
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', 
+  marginBottom: '20px', 
 });
-
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -122,17 +126,17 @@ const Cart = () => {
     <>
       <Navbar />
       <BlackBar>
-        <Box mt={10}> {/* Increased margin to move text down */}
+        <Box mt={10}>
           <MDBTypography tag="h4" className="text-white">
             Your Cart
           </MDBTypography>
         </Box>
       </BlackBar>
-      <section className="h-100" style={{ backgroundColor: '#f9fafb', marginTop: '160px' }}> {/* Adjusted marginTop */}
-        <MDBContainer className="py-4 h-100"> {/* Reduced padding for more compact view */}
-          <MDBRow className="justify-content-center my-3"> {/* Reduced vertical margin */}
+      <section className="h-90" style={{ backgroundColor: '#f9fafb', marginTop: '10px' }}> {/* Reduced margin-top */}
+        <MDBContainer className="py-4 h-100">
+          <MDBRow className="justify-content-center my-3">
             <MDBCol md="8">
-              <MDBCard className="mb-3" style={{ fontSize: '0.85rem' }}> {/* Reduced font size */}
+              <MDBCard className="mb-3" style={{ fontSize: '0.85rem' }}>
                 <MDBCardHeader className="py-2">
                   <MDBTypography tag="h5" className="mb-0">
                     Cart - {cartItems.length} items
@@ -140,10 +144,10 @@ const Cart = () => {
                 </MDBCardHeader>
                 <MDBCardBody>
                   {cartItems.map((item) => (
-                    <MDBRow key={item.id} className="mb-3"> {/* Reduced vertical margin */}
+                    <MDBRow key={item.id} className="mb-3">
                       <MDBCol lg="3" md="12" className="mb-3 mb-lg-0">
                         <MDBRipple rippleTag="div" rippleColor="light" className="bg-image rounded hover-zoom hover-overlay">
-                          <img src={item.image} className="w-100" alt={item.name} style={{ objectFit: 'contain', height: '150px' }} /> {/* Reduced image height */}
+                          <img src={item.image} className="w-100" alt={item.name} style={{ objectFit: 'contain', height: '150px' }} />
                           <a href="#!">
                             <div className="mask" style={{ backgroundColor: 'rgba(251, 251, 251, 0.2)' }}></div>
                           </a>
@@ -156,19 +160,19 @@ const Cart = () => {
                         </p>
                         <p>{item.description}</p>
 
-                        <MDBTooltip wrapperProps={{ size: 'sm' }} wrapperClass="me-1 mb-1" title="Remove item"> {/* Reduced margin */}
+                        <MDBTooltip wrapperProps={{ size: 'sm' }} wrapperClass="me-1 mb-1" title="Remove item">
                           <MDBIcon fas icon="trash" onClick={() => removeItem(item.id)} />
                         </MDBTooltip>
                       </MDBCol>
                       <MDBCol lg="4" md="6" className="mb-3 mb-lg-0">
-                        <div className="d-flex mb-3" style={{ maxWidth: '250px' }}> {/* Reduced width */}
-                          <MDBBtn className="px-2 me-2" onClick={() => updateQuantity(item.id, item.quantity - 1)}> {/* Reduced padding */}
+                        <div className="d-flex mb-3" style={{ maxWidth: '250px' }}>
+                          <MDBBtn className="px-2 me-2" onClick={() => updateQuantity(item.id, item.quantity - 1)}>
                             <MDBIcon fas icon="minus" />
                           </MDBBtn>
 
-                          <MDBInput value={item.quantity} min={0} type="number" label="Quantity" readOnly style={{ width: '50px' }} /> {/* Reduced width */}
+                          <MDBInput value={item.quantity} min={0} type="number" label="Quantity" readOnly style={{ width: '50px' }} />
 
-                          <MDBBtn className="px-2 ms-2" onClick={() => updateQuantity(item.id, item.quantity + 1)}> {/* Reduced padding */}
+                          <MDBBtn className="px-2 ms-2" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
                             <MDBIcon fas icon="plus" />
                           </MDBBtn>
                         </div>
@@ -182,7 +186,7 @@ const Cart = () => {
                 </MDBCardBody>
               </MDBCard>
 
-              <MDBCard className="mb-3"> {/* Reduced margin */}
+              <MDBCard className="mb-3">
                 <MDBCardBody>
                   <p>
                     <strong>Expected shipping delivery</strong>
@@ -191,46 +195,40 @@ const Cart = () => {
                 </MDBCardBody>
               </MDBCard>
 
-              <MDBCard className="mb-3 mb-lg-0"> {/* Reduced margin */}
+              <MDBCard className="mb-3 mb-lg-0">
                 <MDBCardBody>
                   <p>
                     <strong>We accept</strong>
                   </p>
                   <MDBCardImage
                     className="me-2"
-                    width="35px" /* Reduced width */
-                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                    alt="Visa"
+                    width="35px"
+                    src={ezCashLogo} // Using the imported image
+                    alt="eZ Cash"
                   />
                   <MDBCardImage
                     className="me-2"
-                    width="35px" /* Reduced width */
-                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                    alt="American Express"
+                    width="35px"
+                    src={mCashLogo} // Using the imported image
+                    alt="mCash"
                   />
                   <MDBCardImage
                     className="me-2"
-                    width="35px" /* Reduced width */
-                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                    alt="Mastercard"
-                  />
-                  <MDBCardImage
-                    className="me-2"
-                    width="35px" /* Reduced width */
-                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.png"
-                    alt="PayPal acceptance mark"
+                    width="35px"
+                    src={paypalLogo} // Using the imported image for PayPal
+                    alt="PayPal"
                   />
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
             <MDBCol md="4">
-              <MDBCard className="mb-3"> {/* Reduced margin */}
+              <MDBCard className="mb-3">
                 <MDBCardHeader>
                   <MDBTypography tag="h5" className="mb-0">
                     Summary
                   </MDBTypography>
                 </MDBCardHeader>
-                <MDBCardBody style={{ fontSize: '0.85rem' }}> {/* Reduced font size */}
+                <MDBCardBody style={{ fontSize: '0.85rem' }}>
                   <MDBListGroup flush>
                     <MDBListGroupItem className="d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                       Products
@@ -240,7 +238,7 @@ const Cart = () => {
                       Shipping
                       <span>LKR 500.00</span>
                     </MDBListGroupItem>
-                    <MDBListGroupItem className="d-flex justify-content-between align-items-center border-0 px-0 mb-2"> {/* Reduced margin */}
+                    <MDBListGroupItem className="d-flex justify-content-between align-items-center border-0 px-0 mb-2">
                       <div>
                         <strong>Total amount</strong>
                         <strong>

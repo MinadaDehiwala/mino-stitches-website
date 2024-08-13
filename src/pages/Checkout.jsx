@@ -9,13 +9,12 @@ import {
   MDBContainer,
   MDBInput,
   MDBRow,
-  MDBRadio,
   MDBBtn,
   MDBListGroup,
   MDBListGroupItem,
 } from "mdb-react-ui-kit";
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getFirestore, collection, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContextManager';
 
@@ -25,23 +24,41 @@ const Checkout = () => {
   const { cartItems, totalPrice } = location.state || { cartItems: [], totalPrice: 0 };
   const { authUser } = useContext(AuthContext);
 
-  const handlePay = async () => {
-    // Simulate a successful payment process here
-    // Send order details to Firestore
+  const handlePlaceOrder = async () => {
+    // Collect user details (you would typically gather this from form inputs)
+    const userDetails = {
+      firstName: document.getElementById('form1').value,
+      lastName: document.getElementById('form2').value,
+      address: document.getElementById('form3').value,
+      email: document.getElementById('form4').value,
+      phone: document.getElementById('form5').value,
+    };
+
+    // Simulate a successful order process here
     const db = getFirestore();
     const orderData = {
       userId: authUser.uid,
       items: cartItems,
       totalPrice: totalPrice + 500,
       date: new Date(),
+      userDetails,  // include the collected user details
+      status: '',   // empty status field to be set later
     };
 
     try {
+      // Add order details to Firestore
       await addDoc(collection(db, 'orders'), orderData);
-      // Navigate to the invoice page after payment
-      navigate('/invoice', { state: { cartItems, totalPrice, userDetails: authUser } });
+
+      // Delete cart items for the user
+      for (const item of cartItems) {
+        const itemRef = doc(db, 'cart', authUser.uid, 'items', item.id);
+        await deleteDoc(itemRef);
+      }
+
+      // Navigate to the invoice page after placing the order
+      navigate('/invoice', { state: { cartItems, totalPrice, userDetails } });
     } catch (error) {
-      console.error("Error adding order: ", error);
+      console.error("Error processing order: ", error);
     }
   };
 
@@ -88,68 +105,8 @@ const Checkout = () => {
 
                 <hr className="my-4" />
 
-                <h5 className="mb-4">Payment</h5>
-
-                <MDBRadio
-                  name="flexRadioDefault"
-                  id="flexRadioDefault1"
-                  label="Credit card"
-                  defaultChecked
-                />
-
-                <MDBRadio
-                  name="flexRadioDefault"
-                  id="flexRadioDefault2"
-                  label="Debit card"
-                />
-
-                <MDBRadio
-                  name="flexRadioDefault"
-                  id="flexRadioDefault3"
-                  label="Paypal"
-                  wrapperClass="mb-4"
-                />
-
-                <MDBRow>
-                  <MDBCol>
-                    <MDBInput
-                      label="Name on card"
-                      id="form6"
-                      type="text"
-                      wrapperClass="mb-4"
-                    />
-                  </MDBCol>
-                  <MDBCol>
-                    <MDBInput
-                      label="Card number"
-                      id="form7"
-                      type="text"
-                      wrapperClass="mb-4"
-                    />
-                  </MDBCol>
-                </MDBRow>
-
-                <MDBRow>
-                  <MDBCol md="3">
-                    <MDBInput
-                      label="Expiration"
-                      id="form8"
-                      type="text"
-                      wrapperClass="mb-4"
-                    />
-                  </MDBCol>
-                  <MDBCol md="3">
-                    <MDBInput
-                      label="CVV"
-                      id="form9"
-                      type="text"
-                      wrapperClass="mb-4"
-                    />
-                  </MDBCol>
-                </MDBRow>
-
-                <MDBBtn size="lg" block onClick={handlePay}>
-                  Pay
+                <MDBBtn size="lg" block onClick={handlePlaceOrder}>
+                  Place Order
                 </MDBBtn>
               </MDBCardBody>
             </MDBCard>

@@ -4,8 +4,9 @@ import Navbar from '../components/Navbar';
 import { styled } from '@mui/system';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
-import { AuthContext } from '../context/AuthContextManager'; // Import the AuthContext
+import { AuthContext } from '../context/AuthContextManager';
 import Swal from 'sweetalert2';
+import backgroundImage from '../assets/login_signup_background.png'; // Import the background image
 
 // Styled components
 const BlackBar = styled(Box)({
@@ -24,9 +25,9 @@ const BlackBar = styled(Box)({
 
 const ProductContainer = styled(Box)({
   padding: '40px 20px',
-  backgroundColor: '#f9fafb', // Softer background color
+  background: `url(${backgroundImage}) center center/cover no-repeat`, // Add the background image
   minHeight: '100vh',
-  marginTop: '20px', // Adjusted to remove fixed position offset
+  marginTop: '5x', // Adjusted to remove fixed position offset
 });
 
 const CategoryButton = styled(Button)({
