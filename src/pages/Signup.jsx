@@ -1,78 +1,176 @@
-// src/pages/Signup.jsx
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import './Signup.css';
+import React, { useState } from 'react';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../configs/firebase";
+import { collection, addDoc } from 'firebase/firestore';
+import Swal from 'sweetalert2';
+import Navbar from '../components/Navbar.jsx';
+import { useNavigate } from 'react-router-dom';
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+  MDBCard,
+  MDBCardBody,
+  MDBInput,
+  MDBCheckbox,
+  MDBSpinner
+} from 'mdb-react-ui-kit';
 
-// Form validation schema
-const schema = yup.object().shape({
-  firstName: yup.string().required('First Name is required'),
-  lastName: yup.string().required('Last Name is required'),
-  phoneNumber: yup.string().required('Phone Number is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-  confirmPassword: yup.string()
-    .oneOf([yup.ref('password'), null], 'Passwords must match')
-    .required('Confirm Password is required')
-});
+function Signup() {
+  const navigate = useNavigate();
+  const usersCollection = collection(db, "users");
 
-const Signup = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: ""
   });
 
-  const onSubmit = data => {
-    console.log(data);
-    // Handle form submission
+  const [loading, setLoading] = useState(false);
+
+  const onChangeHandler = (event) => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const signIn = async () => {
+    setLoading(true);
+    try {
+      const result = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      if (result !== null) {
+        await addDoc(usersCollection, {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          account_type: "customer",
+          uid: auth.currentUser.uid
+        });
+        const swalResult = await Swal.fire({
+          icon: 'success',
+          title: 'Sign Up Successful',
+          text: 'You have successfully signed up!',
+          timer: 2000, // Auto close after 2 seconds
+          timerProgressBar: true
+        }).then(() => {
+          navigate('/');
+        });
+
+        if (swalResult.isConfirmed) {
+          navigate("/")
+        }
+      }
+    } catch (error) {
+      console.error("Error signing up or storing user data", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Sign Up Failed',
+        text: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInOnClickHandler = () => {
+    signIn();
   };
 
   return (
-    <div className="signup-container">
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label>First Name</label>
-          <input type="text" {...register('firstName')} />
-          {errors.firstName && <p>{errors.firstName.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Last Name</label>
-          <input type="text" {...register('lastName')} />
-          {errors.lastName && <p>{errors.lastName.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Phone Number</label>
-          <input type="text" {...register('phoneNumber')} />
-          {errors.phoneNumber && <p>{errors.phoneNumber.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Address (optional)</label>
-          <input type="text" {...register('address')} />
-        </div>
-        <div className="form-group">
-          <label>Profile Picture</label>
-          <input type="file" {...register('profilePic')} />
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input type="email" {...register('email')} />
-          {errors.email && <p>{errors.email.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Password</label>
-          <input type="password" {...register('password')} />
-          {errors.password && <p>{errors.password.message}</p>}
-        </div>
-        <div className="form-group">
-          <label>Confirm Password</label>
-          <input type="password" {...register('confirmPassword')} />
-          {errors.confirmPassword && <p>{errors.confirmPassword.message}</p>}
-        </div>
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
+    <MDBContainer fluid className='p-4' style={{
+      backgroundImage: 'url(/src/assets/login_signup_background.png)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}>
+      <Navbar />
+      <MDBRow>
+        <MDBCol md='6' className='text-center text-md-start d-flex flex-column justify-content-center'>
+          <h1 className="my-5 display-3 fw-bold ls-tight px-3">
+            Custom Embroidery Services <br />
+            <span className="text-primary">by Mino Stitches</span>
+          </h1>
+          <p className='px-3' style={{ color: 'hsl(217, 10%, 50.8%)' }}>
+            Personalized embroidery made easy. Custom designs and quick turnarounds to bring your visions to life.
+          </p>
+        </MDBCol>
+
+        <MDBCol md='6' className='d-flex justify-content-center align-items-start' style={{ marginTop: '50px' }}>
+          <MDBCard className='my-5' style={{ width: '80%', backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+            <MDBCardBody className='p-5'>
+              <h2 className='text-center mb-4'>Sign Up</h2>
+              {loading ? (
+                <div className="text-center">
+                  <MDBSpinner grow color="primary">
+                    <span className="visually-hidden">We are Signing you up...</span>
+                  </MDBSpinner>
+                  <p>We are Signing you up...</p>
+                </div>
+              ) : (
+                <>
+                  <MDBRow>
+                    <MDBCol col='6'>
+                      <MDBInput
+                        wrapperClass='mb-4'
+                        onChange={onChangeHandler}
+                        value={formData.firstName}
+                        label='First name'
+                        id='form1'
+                        name='firstName'
+                        type='text'
+                      />
+                    </MDBCol>
+                    <MDBCol col='6'>
+                      <MDBInput
+                        wrapperClass='mb-4'
+                        onChange={onChangeHandler}
+                        value={formData.lastName}
+                        label='Last name'
+                        id='form1'
+                        name='lastName'
+                        type='text'
+                      />
+                    </MDBCol>
+                  </MDBRow>
+                  <MDBInput
+                    wrapperClass='mb-4'
+                    onChange={onChangeHandler}
+                    value={formData.email}
+                    label='Email'
+                    id='form1'
+                    name='email'
+                    type='email'
+                  />
+                  <MDBInput
+                    wrapperClass='mb-4'
+                    onChange={onChangeHandler}
+                    value={formData.password}
+                    label='Password'
+                    id='form1'
+                    name='password'
+                    type='password'
+                  />
+                  <div className='d-flex justify-content-center mb-4'>
+                    <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
+                  </div>
+                  <MDBBtn className='w-100 mb-4' size='md' onClick={signInOnClickHandler}>Sign up</MDBBtn>
+                  <div className="text-center">
+                    <p>Already a member? <a href="/login">Login</a></p>
+                  </div>
+                </>
+              )}
+            </MDBCardBody>
+          </MDBCard>
+        </MDBCol>
+      </MDBRow>
+    </MDBContainer>
   );
-};
+}
 
 export default Signup;
