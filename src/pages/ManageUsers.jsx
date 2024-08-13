@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { getFirestore, collection, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { sendPasswordResetEmail } from 'firebase/auth';
-import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBModal, MDBModalBody, MDBModalHeader, MDBInput, MDBIcon, MDBSpinner } from 'mdb-react-ui-kit';
+import { MDBTable, MDBTableHead, MDBTableBody, MDBBtn, MDBContainer, MDBRow, MDBCol, MDBCard, MDBCardBody, MDBIcon, MDBSpinner } from 'mdb-react-ui-kit';
 import Swal from 'sweetalert2';
-import { auth } from '../configs/firebase'; // Ensure you import auth for resetting passwords
+import { auth } from '../configs/firebase';
 import { useNavigate } from 'react-router-dom';
 
 const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
-  const [editData, setEditData] = useState({});
   const db = getFirestore();
   const navigate = useNavigate();
 
@@ -32,14 +29,9 @@ const ManageUsers = () => {
     fetchUsers();
   }, [db]);
 
-  const toggleModal = () => {
-    setModal(!modal);
-  };
-
   const handleEditClick = (user) => {
-    setCurrentUser(user);
-    setEditData(user);
-    toggleModal();
+    console.log("Edit button clicked for user:", user);
+    navigate(`/edit-user/${user.id}`); // Navigate to the EditUser page with the user's ID
   };
 
   const handleDeleteClick = async (userId) => {
@@ -84,32 +76,6 @@ const ManageUsers = () => {
         icon: 'error',
         title: 'Error',
         text: 'An error occurred while sending the password reset email.'
-      });
-    }
-  };
-
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditData(prevData => ({ ...prevData, [name]: value }));
-  };
-
-  const handleEditSubmit = async () => {
-    try {
-      const userRef = doc(db, 'users', currentUser.id);
-      await updateDoc(userRef, editData);
-      Swal.fire({
-        icon: 'success',
-        title: 'User Updated',
-        text: 'User details have been successfully updated.'
-      });
-      setUsers(users.map(user => (user.id === currentUser.id ? { ...user, ...editData } : user)));
-      toggleModal();
-    } catch (error) {
-      console.error("Error updating user:", error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'An error occurred while updating user details.'
       });
     }
   };
@@ -172,18 +138,10 @@ const ManageUsers = () => {
           </MDBCol>
         </MDBRow>
       )}
-      <MDBModal isOpen={modal} toggle={toggleModal}>
-        <MDBModalHeader toggle={toggleModal}>Edit User</MDBModalHeader>
-        <MDBModalBody>
-          <MDBInput label="First Name" name="first_name" value={editData.first_name || ''} onChange={handleEditChange} className="mb-3" />
-          <MDBInput label="Last Name" name="last_name" value={editData.last_name || ''} onChange={handleEditChange} className="mb-3" />
-          <MDBInput label="Email" name="email" value={editData.email || ''} onChange={handleEditChange} className="mb-3" />
-          <MDBInput label="Account Type" name="account_type" value={editData.account_type || ''} onChange={handleEditChange} className="mb-3" />
-          <MDBBtn color="primary" onClick={handleEditSubmit}>Save Changes</MDBBtn>
-        </MDBModalBody>
-      </MDBModal>
     </MDBContainer>
   );
 };
 
 export default ManageUsers;
+
+
