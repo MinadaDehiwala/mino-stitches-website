@@ -6,28 +6,29 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
 import { AuthContext } from '../context/AuthContextManager';
 import Swal from 'sweetalert2';
-import backgroundImage from '../assets/login_signup_background.png'; // Import the background image
+import backgroundImage from '../assets/login_signup_background.png';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 // Styled components
 const BlackBar = styled(Box)({
-  backgroundColor: '#000', // Black color
-  height: '240px', // 4x the original height
+  backgroundColor: '#000',
+  height: '240px',
   width: '100%',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  color: '#fff', // White text color
-  fontSize: '20px', // Adjust text size as needed
+  color: '#fff',
+  fontSize: '20px',
   padding: '0 20px',
-  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', // Added shadow for a subtle effect
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
 });
 
 const ProductContainer = styled(Box)({
   padding: '40px 20px',
-  background: `url(${backgroundImage}) center center/cover no-repeat`, // Add the background image
+  background: `url(${backgroundImage}) center center/cover no-repeat`,
   minHeight: '100vh',
-  marginTop: '5x', // Adjusted to remove fixed position offset
+  marginTop: '5x',
 });
 
 const CategoryButton = styled(Button)({
@@ -55,7 +56,8 @@ const ProductCard = styled(Card)({
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { authUser } = useContext(AuthContext); // Use the AuthContext to get the authenticated user
+  const { authUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -96,11 +98,9 @@ const Products = () => {
       const itemDoc = await getDoc(itemRef);
 
       if (itemDoc.exists()) {
-        // Update the existing product's quantity
         const newQuantity = itemDoc.data().quantity + 1;
         await setDoc(itemRef, { ...itemDoc.data(), quantity: newQuantity });
       } else {
-        // Add the new product to the cart
         await setDoc(itemRef, { ...product, quantity: 1 });
       }
 
@@ -120,8 +120,9 @@ const Products = () => {
   };
 
   const handleCategoryClick = (category) => {
-    if (category === 'Hoop Stitches') {
-      // Implement category filtering logic here
+    if (category === 'Customized') {
+      navigate('/custom');
+    } else if (category === 'Hoop Stitches') {
       console.log(`Selected Category: ${category}`);
     } else {
       Swal.fire({
@@ -144,7 +145,7 @@ const Products = () => {
     <Box>
       <Navbar />
       <BlackBar>
-        <Box mt={8}> {/* Move the text and buttons down */}
+        <Box mt={8}>
           <Typography variant="h4" component="div">
             Welcome to Mino Stitches
           </Typography>
@@ -178,9 +179,9 @@ const Products = () => {
                     image={product.image}
                     alt={product.name}
                     sx={{
-                      height: '200px', // Set a fixed height
-                      objectFit: 'contain', // Contain image within the box
-                      borderRadius: '4px', // Add some rounding for aesthetics
+                      height: '200px',
+                      objectFit: 'contain',
+                      borderRadius: '4px',
                     }}
                   />
                   <CardContent>

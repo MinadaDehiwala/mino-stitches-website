@@ -19,7 +19,11 @@ import Admin from './pages/Admin.jsx';
 import AddProduct from './pages/AddProduct.jsx';
 import EditProduct from './pages/EditProduct.jsx';
 import Orders from './pages/orders.jsx';
-import EditUser from './pages/EditUser.jsx'; // Import EditUser component
+import EditUser from './pages/EditUser.jsx';
+import Custom from './pages/custom.jsx'; // Import Custom component
+import Message from './pages/message.jsx'; // Import Message component
+import AdminMessages from './pages/admin_messages.jsx'; // Import AdminMessages component
+import AdminCustomOrders from './pages/admin_custom_orders.jsx'; // Import AdminCustomOrders component
 import ProtectedRoutes from './components/ProtectedRoutes.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -49,6 +53,14 @@ const router = createBrowserRouter([
     element: <About />,
   },
   {
+    path: "/custom",
+    element: <Custom />, // Add the Custom component route
+  },
+  {
+    path: "/message",
+    element: <Message />, // Add the Message component route
+  },
+  {
     element: <ProtectedRoutes allowedRoles={['customer', 'admin']} />,
     children: [
       { path: "/products", element: <Products /> },
@@ -68,7 +80,9 @@ const router = createBrowserRouter([
       { path: "/add-product", element: <AddProduct /> },
       { path: "/edit-product/:id", element: <EditProduct /> },
       { path: "/orders", element: <Orders /> },
-      { path: "/edit-user/:id", element: <EditUser /> }, // Add the new route for editing users
+      { path: "/edit-user/:id", element: <EditUser /> },
+      { path: "/admin-messages", element: <AdminMessages /> }, // Add AdminMessages component route
+      { path: "/admin-custom-orders", element: <AdminCustomOrders /> }, // Add AdminCustomOrders component route
     ]
   }
 ]);

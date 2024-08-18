@@ -8,7 +8,7 @@ import logo from '../assets/brand-logo.png';
 import { AuthContext } from "../context/AuthContextManager"
 
 const Navbar = () => {
-    const { authUser } = useContext(AuthContext)
+    const { authUser } = useContext(AuthContext);
     const [searchOpen, setSearchOpen] = useState(false);
 
     const handleSearchClick = () => {
@@ -29,6 +29,7 @@ const Navbar = () => {
                         </>}
                     <NavLink to="/chatbot" className={({ isActive }) => (isActive ? "active" : "")}>ChatBot</NavLink>
                     <NavLink to="/about" className={({ isActive }) => (isActive ? "active" : "")}>About Us</NavLink>
+                    <NavLink to="/message" className={({ isActive }) => (isActive ? "active" : "")}>Contact Us</NavLink> {/* Added Contact Us */}
                     {authUser == null ?
                         (<NavLink to="/login" className={({ isActive }) => (isActive ? "active" : "")}>Login / Signup</NavLink>)
                         : <NavLink to="/profile" className={({ isActive }) => (isActive ? "active" : "")}>Profile</NavLink>}
