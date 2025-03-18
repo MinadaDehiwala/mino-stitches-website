@@ -159,7 +159,7 @@ const ChatBot = () => {
       const response = await axios.post(
         apiUrl,
         {
-          model: "gpt-4",
+          model: "gpt-4o-mini",
           messages: [
             { role: "system", content: "You are an assistant for an ecommerce website called Mino Stitches where they sell hand embroided Items. Do not break character and only reply in 1 sentence (like human)." },
             { role: "user", content: userMessage.text }
